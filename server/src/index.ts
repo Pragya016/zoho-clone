@@ -3,12 +3,18 @@ import admin from "firebase-admin";
 import cors from 'cors';
 import { AppDataSource } from "./database/datasource";
 import authRouter from './routers/auth.router';
+import bodyParser from "body-parser";
 
 const server = express();
+
+// middlewares
 server.use(express.json());
 server.use(cors({
     origin: '*',
 }))
+server.use(bodyParser.urlencoded({
+    extended: true
+}));
 
 // initialize firebase admin
 admin.initializeApp({
@@ -26,7 +32,7 @@ AppDataSource.initialize()
 
 
 // API routes
-server.get('/api/auth', authRouter);
+server.use('/api/auth', authRouter);
 
 server.listen(3000, () => {
     console.log('server is running');

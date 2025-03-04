@@ -1,11 +1,15 @@
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import SigninCard from './components/SigninCard'
+import SignInCard from './components/SignInCard'
+import Home from './pages/Home';
+import SignUpCard from './components/SignupCard';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/sign-in' element={<SigninCard />}/>
+        <Route path='/' element={<Home />} />
+        <Route path='/sign-in' element={<SignInCard />}/>
+        <Route path='/sign-up' element={<SignUpCard />}/>
       </Routes>
     </BrowserRouter>
   )

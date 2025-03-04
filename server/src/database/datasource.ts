@@ -15,5 +15,5 @@ export const AppDataSource = new DataSource({
         rejectUnauthorized: false
     },
     entities:[path.join(__dirname, "../entity/*{.ts,.js}")], 
-    logging: true,
+    // logging: true,
 });

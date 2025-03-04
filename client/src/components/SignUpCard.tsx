@@ -58,10 +58,11 @@ const useStyles = makeStyles({
   }
 });
 
-function SignInCard(){
+function SignUpCard(){
   const styles = useStyles();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [name, setName] = useState<string>("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -86,17 +87,17 @@ function SignInCard(){
     }
   }
 
-  async function handleEmailLogin(e: FormEvent<HTMLFormElement>) {
+  async function handleCreateUser(e: FormEvent<HTMLFormElement>) {
     try {
       e.preventDefault();
-      const res = await fetchData('/api/auth', 'POST', {email, password})
-      if(res && res.status !== 200) {
+      const res = await fetchData('/api/auth/new', 'POST', {name, email, password, role: 'admin'});
+
+      if(res.status !== 200) {
         console.log('Something went wrong', res);
         return;
       }
 
-      localStorage.setItem('idToken', res && res.data.token);
-      navigate('/');
+      navigate('/sign-in');
     } catch (error: unknown) {
       console.error(error);
     }
@@ -118,10 +119,18 @@ function SignInCard(){
           <p className={styles.logo}>Logo</p>
         </div>
         <div>
-          <p className={styles.heading}>Sign in</p>
+          <p className={styles.heading}>Create new account</p>
           <p className={styles.text1}>to access Zoho Home</p>
         </div>
-        <form onSubmit={handleEmailLogin} className={styles.form}>
+        <form onSubmit={handleCreateUser} className={styles.form}>
+          <TextField 
+            sx={{marginBottom: '0.3rem'}}
+            type="name" 
+            placeholder="name" 
+            value={name} 
+            onChange={(e) => setName(e.target.value)} 
+            required 
+          />
           <TextField 
             sx={{marginBottom: '0.3rem'}}
             type="email" 
@@ -137,7 +146,7 @@ function SignInCard(){
             onChange={(e) => setPassword(e.target.value)} 
             required 
           />
-          <Button sx={{margin: '1rem 0'}} variant="contained" type="submit">Sign in</Button>
+          <Button sx={{margin: '1rem 0'}} variant="contained" type="submit">Create Account</Button>
         </form>
         <div className={styles.buttonContainer}>
           <Button sx={{border: '2px solid lightgrey', color: 'grey'}} onClick={handleGoogleLogin}>
@@ -150,4 +159,4 @@ function SignInCard(){
   );
 };
 
-export default SignInCard;
+export default SignUpCard;
