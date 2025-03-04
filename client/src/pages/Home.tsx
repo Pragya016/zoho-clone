@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { fetchData } from "../utility";
 import { useEffect } from "react";
+import SidebarMenu from "../components/Sidebar";
+import { Box } from "@mui/material";
 
 export default function Home() {
     const navigate = useNavigate();
@@ -31,6 +33,9 @@ export default function Home() {
   
 
     return (
+      <Box sx={{display: 'flex'}}>
+      <SidebarMenu />
         <h1>Hello World, You're on the homepage</h1>
+      </Box>
     )
 }

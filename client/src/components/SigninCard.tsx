@@ -144,7 +144,7 @@ function SignInCard(){
             <GoogleIcon className={styles.googleIcon}/> Sign in using Google
           </Button>
         </div>
-        <p className={styles.text}>Don't have a Zoho account? <b className={styles.redirectLink}>Sign up now</b></p>
+        <p className={styles.text}>Don't have a Zoho account? <b className={styles.redirectLink} onClick={() => navigate('/sign-up')}>Sign up now</b></p>
       </div>
     </div>
   );

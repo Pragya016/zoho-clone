@@ -92,8 +92,8 @@ function SignUpCard(){
       e.preventDefault();
       const res = await fetchData('/api/auth/new', 'POST', {name, email, password, role: 'admin'});
 
-      if(res.status !== 200) {
-        console.log('Something went wrong', res);
+      if(res.status !== 201) {
+
         return;
       }
 
@@ -153,7 +153,7 @@ function SignUpCard(){
             <GoogleIcon className={styles.googleIcon}/> Sign in using Google
           </Button>
         </div>
-        <p className={styles.text}>Don't have a Zoho account? <b className={styles.redirectLink}>Sign up now</b></p>
+        <p className={styles.text}>Don't have a Zoho account? <b className={styles.redirectLink} onClick={() => navigate('/sign-in')}>Sign in instead</b></p>
       </div>
     </div>
   );

@@ -74,18 +74,24 @@ export async function handleSigninUser(req: Request, res: Response) {
       return res.status(400).send({ message: "Email or password is required" });
     }
 
+
     // check if user with the email exists in the database
     const user = await userRepository
       .createQueryBuilder("users")
-      .andWhere(`(users.email = :email AND users.password = :password)`, {
+      .where(`(users.email = :email)`, {
         email,
-        password,
       })
       .getOne();
 
     if (!user) {
       // we could also return the response 'User not found'. However it may increase the risk of leaking any private information
       return res.status(404).send({ message: "Email or password is invalid" });
+    }
+
+    const isCorrectPassword = await bcrypt.compare(password, user?.password);
+
+    if(!isCorrectPassword) {
+      return res.status(401).send({message: 'email or password in incorrect'});
     }
 
     // @ts-ignore
