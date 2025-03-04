@@ -1,9 +1,10 @@
-import express from "express";
+import express, {Request, Response} from "express";
 import admin from "firebase-admin";
 import cors from 'cors';
 import { AppDataSource } from "./database/datasource";
 import authRouter from './routers/auth.router';
 import bodyParser from "body-parser";
+import { sendMail } from "./actions/mail.action";
 
 const server = express();
 

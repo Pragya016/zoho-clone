@@ -4,6 +4,7 @@ import { AppDataSource } from "../database/datasource";
 import jwt from "jsonwebtoken";
 import { config } from "dotenv";
 import bcrypt from "bcrypt";
+import { sendMail } from "../actions/mail.action";
 config();
 
 const userRepository = AppDataSource.getRepository(User);
@@ -57,7 +58,7 @@ export async function handleSignupUser(req: Request, res: Response) {
     user.role = role;
 
     await userRepository.save(user);
-
+    sendMail(email, name);
     return res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     console.error("Error signing up user:", error);
@@ -99,6 +100,7 @@ export async function handleSigninUser(req: Request, res: Response) {
     const token = jwt.sign({ ...user }, process.env.SECRET_KEY, {
       expiresIn: "3d",
     });
+
     res.status(200).send({ token });
   } catch (error) {
     console.log(error);
