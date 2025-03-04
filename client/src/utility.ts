@@ -14,6 +14,6 @@ export async function fetchData(endpoint: string, method: string, data?: object)
                 return result;
         }
     } catch (error: unknown) {
-        throw new Error(error);
+        return error;
     }
 }

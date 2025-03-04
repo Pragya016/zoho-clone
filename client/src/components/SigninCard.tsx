@@ -1,11 +1,17 @@
-import { useState, FormEvent, useEffect } from "react";
+import { useState, FormEvent, useEffect, BaseSyntheticEvent } from "react";
 import GoogleIcon from '@mui/icons-material/Google';
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../config/firebase";
 import { makeStyles } from "@mui/styles";
-import { Button, TextField } from "@mui/material";
+import { Alert, Button, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { fetchData } from "../utility";
+import logo from '../assets/zoho-logo.png';
+
+interface FormDataInterface {
+  email: string;
+  password: string
+}
 
 const useStyles = makeStyles({
   backdrop: {
@@ -24,11 +30,12 @@ const useStyles = makeStyles({
     width: '40vw'
   },
   logo: {
-    fontSize: '2rem'
+    height: '50px',
+    width: '130px'
   },
   heading: {
     fontSize: '1.5rem',
-    margin: 0
+    margin: '1rem 0 0 0'
   },
   text1: {
     margin: 0
@@ -51,18 +58,20 @@ const useStyles = makeStyles({
   },
   redirectLink: {
     cursor: 'pointer',
-    color: 'blue'
+    color: '#F0483D'
   },
   googleIcon: {
     marginRight: '5px'
   }
 });
 
+const initialState = {email: '', password: ''};
+
 function SignInCard(){
   const styles = useStyles();
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [formData, setFormData] = useState<FormDataInterface>(initialState);
   const navigate = useNavigate();
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
     const token = localStorage.getItem('idToken');
@@ -89,13 +98,14 @@ function SignInCard(){
   async function handleEmailLogin(e: FormEvent<HTMLFormElement>) {
     try {
       e.preventDefault();
-      const res = await fetchData('/api/auth', 'POST', {email, password})
-      if(res && res.status !== 200) {
-        console.log('Something went wrong', res);
+      const res = await fetchData('/api/auth', 'POST', formData)
+      if(res && res.data.status === 'rejected') {
+        setError(res.data.message);
         return;
       }
 
       localStorage.setItem('idToken', res && res.data.token);
+      setFormData(initialState);
       navigate('/');
     } catch (error: unknown) {
       console.error(error);
@@ -111,33 +121,48 @@ function SignInCard(){
     }
   };
 
+  function handleChange(e: BaseSyntheticEvent) {
+    const name = e.target.name;
+    const value = e.target.value;
+    setFormData({...formData, [name]: value});
+
+    if(error) {
+      setError('');
+    }
+  }
+
   return (
     <div className={styles.backdrop}>
       <div className={styles.card}>
         <div>
-          <p className={styles.logo}>Logo</p>
+            <img src={logo} alt="logo" className={styles.logo} />
         </div>
         <div>
           <p className={styles.heading}>Sign in</p>
           <p className={styles.text1}>to access Zoho Home</p>
         </div>
         <form onSubmit={handleEmailLogin} className={styles.form}>
+        {error && <Alert severity="error">{error}</Alert>}
+        <label htmlFor="email" style={{color: 'grey'}}>Email</label>
           <TextField 
             sx={{marginBottom: '0.3rem'}}
+            id="email"
             type="email" 
-            placeholder="Email" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
+            name="email"
+            value={formData.email} 
+            onChange={handleChange}
             required 
           />
-          <TextField 
-            type="password" 
-            placeholder="Password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
+          <label htmlFor="password" style={{marginTop: '1rem', color:'grey'}}>Password</label>
+          <TextField
+            id="password"
+            type="password"  
+            name="password"
+            value={formData.password} 
+            onChange={handleChange}
             required 
           />
-          <Button sx={{margin: '1rem 0'}} variant="contained" type="submit">Sign in</Button>
+          <Button sx={{margin: '1rem 0', background: '#F0483D', fontWeight: 600}} variant="contained" type="submit">Sign in</Button>
         </form>
         <div className={styles.buttonContainer}>
           <Button sx={{border: '2px solid lightgrey', color: 'grey'}} onClick={handleGoogleLogin}>

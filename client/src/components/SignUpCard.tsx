@@ -1,162 +1,220 @@
-import { useState, FormEvent, useEffect } from "react";
-import GoogleIcon from '@mui/icons-material/Google';
-import { signInWithPopup } from "firebase/auth";
-import { auth, provider } from "../config/firebase";
+import { useState, FormEvent, useEffect, BaseSyntheticEvent } from "react";
+// import GoogleIcon from "@mui/icons-material/Google";
+// import { signInWithPopup } from "firebase/auth";
+// import { auth, provider } from "../config/firebase";
 import { makeStyles } from "@mui/styles";
-import { Button, TextField } from "@mui/material";
+import { Alert, Button, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { fetchData } from "../utility";
+import logo from "../assets/zoho-logo.png";
+
+export interface FormDataInterface {
+  name: string,
+  email: string,
+  password: string
+}
 
 const useStyles = makeStyles({
   backdrop: {
-    background: 'whitesmoke',
-    height: '100svh',
-    width: '100svw',
-    overflow: 'hidden',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  }, 
+    background: "white",
+    height: "100svh",
+    width: "100svw",
+    overflow: "hidden",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   card: {
-    background: 'white',
-    borderRadius: '15px',
-    padding: '2rem',
-    width: '40vw'
+    borderRadius: "15px",
+    padding: "2rem",
+    width: "40vw",
   },
   logo: {
-    fontSize: '2rem'
+    height: "50px",
+    width: "130px",
+    marginLeft: "2rem",
   },
   heading: {
-    fontSize: '1.5rem',
-    margin: 0
+    margin: "1rem 0 0 0",
+    textAlign: "center",
   },
   text1: {
-    margin: 0
+    margin: 0,
   },
   form: {
     display: "flex",
-    justifyContent: 'center',
-    flexDirection: 'column',
-    margin: '2rem 0'
+    justifyContent: "center",
+    flexDirection: "column",
+    margin: "2rem 0",
   },
   buttonContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   text: {
-    color: 'grey',
-    margin: '2rem 0 0 0',
-    textAlign: 'center'
+    color: "grey",
+    margin: "2rem 0 0 0",
+    textAlign: "center",
   },
   redirectLink: {
-    cursor: 'pointer',
-    color: 'blue'
+    cursor: "pointer",
+    color: "blue",
   },
   googleIcon: {
-    marginRight: '5px'
-  }
+    marginRight: "5px",
+  },
+  nav: {
+    position: "absolute",
+    top: 0,
+    width: "100svw",
+    margin: "auto",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "1rem",
+    borderBottom: "1px solid lightgrey",
+  },
 });
 
-function SignUpCard(){
+const initialState = {name: '', email: '', password: ''};
+function SignUpCard() {
   const styles = useStyles();
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [name, setName] = useState<string>("");
+  const [formData, setFormData] = useState<FormDataInterface>(initialState);
   const navigate = useNavigate();
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
-    const token = localStorage.getItem('idToken');
+    const token = localStorage.getItem("idToken");
 
-    if(token){
+    if (token) {
       handleRedirect(token);
     }
+  }, []);
 
-  }, [])
-
-  async function handleRedirect(token : string) {
+  async function handleRedirect(token: string) {
     try {
-      const res = await fetchData(`/api/auth?idToken=${token}`, 'GET');
-      
-      if(res?.status === 200) {
-        navigate('/');
-      }
+      const res = await fetchData(`/api/auth?idToken=${token}`, "GET");
 
+      if (res?.status === 200) {
+        navigate("/");
+      }
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   }
 
   async function handleCreateUser(e: FormEvent<HTMLFormElement>) {
     try {
       e.preventDefault();
-      const res = await fetchData('/api/auth/new', 'POST', {name, email, password, role: 'admin'});
+      const res = await fetchData("/api/auth/new", "POST", {
+        ...formData, role: 'admin'
+      });
 
-      if(res.status !== 201) {
-
+      if (res && res.data.status === 'rejected') {
+        setError(res.data.message)
         return;
       }
 
-      navigate('/sign-in');
+      setFormData(initialState)
+      navigate("/sign-in");
     } catch (error: unknown) {
       console.error(error);
     }
-  };
+  }
 
-  async function handleGoogleLogin() {
-    try {
-      const result = await signInWithPopup(auth, provider);
-      console.log("Logged in with Google!", result);
-    } catch (error) {
-      console.error(error);
+  function handleChange(e: BaseSyntheticEvent) {
+    console.log(e.target.value, e.target.name);
+    const name = e.target.name;
+    const value = e.target.value;
+    setFormData({...formData, [name]: value});
+    if(error) {
+      setError('');
     }
-  };
+  } 
+
+  // async function handleGoogleLogin() {
+  //   try {
+  //     const result = await signInWithPopup(auth, provider);
+  //     console.log("Logged in with Google!", result);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
 
   return (
     <div className={styles.backdrop}>
+      <nav className={styles.nav}>
+        <img src={logo} alt="logo" className={styles.logo} />
+        <div>
+          Already have a Zoho account?
+          <Button
+            sx={{ marginRight: "2rem", color: "#F0483D" }}
+            onClick={() => navigate("/sign-in")}
+          >
+            Sign in
+          </Button>
+        </div>
+      </nav>
       <div className={styles.card}>
         <div>
-          <p className={styles.logo}>Logo</p>
-        </div>
-        <div>
-          <p className={styles.heading}>Create new account</p>
-          <p className={styles.text1}>to access Zoho Home</p>
+          <h1 className={styles.heading}>
+            Start with your free account today.
+          </h1>
         </div>
         <form onSubmit={handleCreateUser} className={styles.form}>
-          <TextField 
-            sx={{marginBottom: '0.3rem'}}
-            type="name" 
-            placeholder="name" 
-            value={name} 
-            onChange={(e) => setName(e.target.value)} 
-            required 
+          {error && <Alert severity="error" sx={{marginBottom: '1.5rem'}}>{error}</Alert>}
+          <label htmlFor="name" style={{ color: "grey" }}>
+            Name
+          </label>
+          <TextField
+            sx={{ marginBottom: "1rem" }}
+            id="name"
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
           />
-          <TextField 
-            sx={{marginBottom: '0.3rem'}}
-            type="email" 
-            placeholder="Email" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
-            required 
+          <label htmlFor="email" style={{ color: "grey" }}>
+            Email
+          </label>
+          <TextField
+            sx={{ marginBottom: "1rem" }}
+            id="email"
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
           />
-          <TextField 
-            type="password" 
-            placeholder="Password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            required 
+          <label htmlFor="password" style={{ color: "grey" }}>
+            Password
+          </label>
+          <TextField
+            id="password"
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
           />
-          <Button sx={{margin: '1rem 0'}} variant="contained" type="submit">Create Account</Button>
+          <Button
+            sx={{ margin: "1rem 0", background: "#F0483D", fontWeight: 600 }}
+            variant="contained"
+            type="submit"
+          >
+            SIGN UP FOR FREE
+          </Button>
         </form>
-        <div className={styles.buttonContainer}>
+        {/* <div className={styles.buttonContainer}>
           <Button sx={{border: '2px solid lightgrey', color: 'grey'}} onClick={handleGoogleLogin}>
             <GoogleIcon className={styles.googleIcon}/> Sign in using Google
           </Button>
-        </div>
-        <p className={styles.text}>Don't have a Zoho account? <b className={styles.redirectLink} onClick={() => navigate('/sign-in')}>Sign in instead</b></p>
+        </div> */}
       </div>
     </div>
   );
-};
+}
 
 export default SignUpCard;

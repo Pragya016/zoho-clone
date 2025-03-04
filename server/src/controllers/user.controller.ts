@@ -14,7 +14,8 @@ export async function verifyToken(req: Request, res: Response) {
   const { idToken } = req.query;
 
   if (!idToken) {
-    return res.status(401).json({ error: "Unauthorized" });
+    // return res.status(401).send({ error: "Unauthorized" });
+    return res.send({ error: "Unauthorized", status: 'rejected'});
   }
 
   try {
@@ -23,7 +24,8 @@ export async function verifyToken(req: Request, res: Response) {
     const decodedToken = await jwt.verify(idToken, process.env.SECRET_KEY);
     res.status(200).send(decodedToken);
   } catch (error) {
-    return res.status(403).json({ error: "Invalid token" });
+    // return res.status(403).send({ error: "Invalid token", status: 'success' });
+    return res.send({ error: "Invalid token", status: 'rejected' });
   }
 }
 
@@ -34,7 +36,8 @@ export async function handleSignupUser(req: Request, res: Response) {
     // Validate user input
     const result = validateInput(name, email, password);
     if (result.status === "rejected") {
-      return res.status(400).json(result);
+      // return res.status(400).send(result);
+      return res.send(result);
     }
 
     // Check if user with the entered email already exists in the database
@@ -44,7 +47,8 @@ export async function handleSignupUser(req: Request, res: Response) {
       .getOne();
 
     if (existingUser) {
-      return res.status(403).json({ message: "User already exists" });
+      // return res.status(403).json({ message: "User already exists" });
+      return res.send({ message: "User already exists", status: "rejected" });
     }
 
     // Hash password before saving
@@ -59,10 +63,11 @@ export async function handleSignupUser(req: Request, res: Response) {
 
     await userRepository.save(user);
     sendMail(email, name);
-    return res.status(201).json({ message: "User registered successfully" });
+    return res.status(201).send({ message: "User registered successfully", status: 'success' });
   } catch (error) {
     console.error("Error signing up user:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    // return res.status(500).send({ message: "Internal server error" });
+    return res.send({ message: "Internal server error", status: "rejected" });
   }
 }
 
@@ -72,7 +77,8 @@ export async function handleSigninUser(req: Request, res: Response) {
 
     // if email or password is empty string
     if (!email || !password) {
-      return res.status(400).send({ message: "Email or password is required" });
+      // return res.status(400).send({ message: "Email or password is required" });
+      return res.send({ message: "Email or password is required", status: 'rejected' });
     }
 
 
@@ -86,13 +92,14 @@ export async function handleSigninUser(req: Request, res: Response) {
 
     if (!user) {
       // we could also return the response 'User not found'. However it may increase the risk of leaking any private information
-      return res.status(404).send({ message: "Email or password is invalid" });
+      // return res.status(404).send({ message: "Email or password is invalid" });
+      return res.send({ message: "Email or password is invalid", status: 'rejected' });
     }
 
     const isCorrectPassword = await bcrypt.compare(password, user?.password);
 
     if(!isCorrectPassword) {
-      return res.status(401).send({message: 'email or password in incorrect'});
+      return res.send({message: 'email or password in incorrect', status: 'rejected' });
     }
 
     // @ts-ignore
@@ -101,9 +108,10 @@ export async function handleSigninUser(req: Request, res: Response) {
       expiresIn: "3d",
     });
 
-    res.status(200).send({ token });
+    res.status(200).send({ token, status: 'success' });
   } catch (error) {
     console.log(error);
+    res.send({message: 'Internal server error', status: 'rejected'})
   }
 }
 
