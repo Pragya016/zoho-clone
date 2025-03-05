@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import SidebarMenu from "../components/Sidebar";
 import { Box } from "@mui/material";
 import { ResponseInterface } from "../components/SignInCard";
-import { Admin, useUser } from "../context/User";
+import { Admin, useAdmin } from "../context/Admin";
 import CRMTab from "../components/CRMTab";
 
 interface AdminInterface {
@@ -13,7 +13,7 @@ interface AdminInterface {
 
 export default function Home() {
     const navigate = useNavigate();
-    const {setAdmin} = useUser();
+    const {setAdmin} = useAdmin();
 
     useEffect(() => {
       const token = localStorage.getItem('idToken');

@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
-import { User } from "./server/src/entity/Admin";
+import { User } from "./User";
 
 @Entity({
   name: 'employees'
@@ -15,11 +15,11 @@ export class Employee {
   email!: string;
 
   @Column()
-  password!: string;
+  position!: string;
 
   @Column()
   role!: string;
 
-  @ManyToOne(() => User, (user) => user.id)
-  user_id!: User
+  @ManyToOne(() => User, (user: User) => user.id)
+  user!: User
 }

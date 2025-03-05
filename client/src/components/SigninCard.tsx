@@ -3,7 +3,7 @@ import { Alert, Button, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { fetchData } from "../utility";
 import logo from '../assets/zoho-logo.png';
-import { useUser, Admin } from "../context/User";
+import { useAdmin, Admin } from "../context/Admin";
 import styles from './css/signin.module.css';
 
 interface FormDataInterface {
@@ -30,7 +30,7 @@ function SignInCard(){
   const [formData, setFormData] = useState<FormDataInterface>(initialState);
   const navigate = useNavigate();
   const [error, setError] = useState<string>('');
-  const {setAdmin} = useUser();
+  const {setAdmin} = useAdmin();
 
   useEffect(() => {
     const token = localStorage.getItem('idToken');
@@ -60,7 +60,6 @@ function SignInCard(){
       const res = await fetchData('/api/auth', 'POST', formData)
 
       if(res && (res as ResponseInterface).status !== 200) {
-        console.log(res);
         setError((res as ResponseInterface).message);
         setFormData(initialState);
         return;

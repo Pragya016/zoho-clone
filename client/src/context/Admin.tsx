@@ -25,7 +25,7 @@ const dummyUser: AdminInterface = {
 
 const UserContext = createContext<AdminInterface>(dummyUser);
 
-export function UserProvider({ children }: ProviderInterface) {
+export function AdminProvider({ children }: ProviderInterface) {
     const [admin, setAdmin] = useState<Admin | null>(null);
 
     return (
@@ -35,6 +35,6 @@ export function UserProvider({ children }: ProviderInterface) {
     );
 }
 
-export function useUser() {
+export function useAdmin() {
     return useContext(UserContext);
 }

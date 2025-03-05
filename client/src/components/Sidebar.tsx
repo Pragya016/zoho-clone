@@ -13,7 +13,7 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import userImage from '../assets/default-user-icon.jpg'
 import styles from './css/sidebar.module.css';
-import { useUser } from "../context/User";
+import { useAdmin } from "../context/Admin";
 
 // TODO: Change styles for the selected column
 interface Active {
@@ -26,7 +26,7 @@ export default function SidebarMenu() {
   const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [isActive, setIsActive] = useState<Active>(initialState);
-  const {admin} = useUser();
+  const {admin} = useAdmin();
 
   function handleLogoutUser() {
     localStorage.removeItem('idToken');    

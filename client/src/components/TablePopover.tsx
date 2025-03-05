@@ -23,7 +23,6 @@ export default function TablePopover({onDelete}: PopoverProps) {
   const id = open ? 'simple-popover' : undefined;
 
   function handleDelete(id: number) {
-    console.log(id);
     onDelete(id);
   }
 

@@ -13,6 +13,11 @@ export async function fetchData(endpoint: string, method: string, data?: object,
                 }
 
                 result = await axios.post(baseUrl + endpoint, data, headers);
+                console.log(result);
+                return result;
+            
+            case 'DELETE':
+                result = await axios.delete(baseUrl + endpoint);                
                 return result;
             default: 
                 result = await axios.get(baseUrl + endpoint);

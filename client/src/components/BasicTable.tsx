@@ -1,3 +1,4 @@
+import { fetchData } from "../utility";
 import { Employees } from "./CRMTab";
 import styles from './css/employees.table.module.css';
 import TablePopover from "./TablePopover";
@@ -10,8 +11,17 @@ export default function BasicTable({ employees }: Employees) {
     const headings = ['' ,...Object.keys(employees[0])];
 
     function handleDelete(id: number) {
-        // delete data from the database
-        console.log('id from table', id);
+        deleteUser(id);
+    }
+
+    async function deleteUser(id: number){
+        try {
+            const res = await fetchData(`/api/admin/${id}`, 'DELETE');
+            // update the state as well
+            console.log(res);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return (

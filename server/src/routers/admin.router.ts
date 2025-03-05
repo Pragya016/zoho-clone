@@ -1,11 +1,15 @@
 import { Router, Request, Response } from "express";
-import { handleFileUpload } from "../controllers/auth.controllers";
+import { handleDeleteUser, handleFileUpload, handleGetUsers } from "../controllers/admin.controller";
 import { upload } from "../config/file.upload";
 
 const router = Router();
 
-router.route('/').post((req: Request, res: Response) => {
-    
+router.route('/').get((req: Request, res: Response) => {
+    handleGetUsers(req, res);
+})
+
+router.route('/:userId').delete((req: Request, res: Response) => {
+    handleDeleteUser(req, res);
 })
 
 router.post('/upload', upload.single('employees-data'), (req: Request, res: Response) => {
