@@ -1,0 +1,73 @@
+#backdrop {
+    height: 100svh;
+    width: 100svw;
+    overflow: hidden;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#card {
+    border-radius: 15px;
+    padding: 2rem;
+    width: 40vw;
+}
+
+#logo {
+    height: 50px;
+    width: 130px;
+    margin-left: 2rem;
+}
+
+#heading {
+    margin: 1rem 0 0 0;
+}
+
+#text1 {
+    margin: 0;
+}
+
+#form {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin: 2rem 0;
+}
+
+#buttonContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#text {
+    color: grey;
+    margin: 2rem 0 0 0;
+    text-align: center;
+}
+
+#redirectLink {
+    cursor: pointer;
+    color: var(--button-color);
+}
+
+#googleIcon {
+    margin-right: 5px;
+}
+
+#nav {
+    position: absolute;
+    top: 0;
+    width: 100svw;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid lightgrey;
+}
+
+.label {
+    color: grey;
+}

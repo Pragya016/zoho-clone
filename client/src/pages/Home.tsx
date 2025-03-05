@@ -5,6 +5,7 @@ import SidebarMenu from "../components/Sidebar";
 import { Box } from "@mui/material";
 import { ResponseInterface } from "../components/SignInCard";
 import { Admin, useUser } from "../context/User";
+import CRMTab from "../components/CRMTab";
 
 interface AdminInterface {
   data: Admin;
@@ -42,7 +43,9 @@ export default function Home() {
     return (
       <Box sx={{display: 'flex'}}>
       <SidebarMenu />
-        <h1>Hello World, You're on the homepage</h1>
+      <div id="content">
+        <CRMTab />
+      </div>
       </Box>
     )
 }

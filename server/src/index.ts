@@ -1,8 +1,9 @@
-import express, {Request, Response} from "express";
+import express from "express";
 import admin from "firebase-admin";
 import cors from 'cors';
 import { AppDataSource } from "./database/datasource";
 import authRouter from './routers/auth.router';
+import adminRouter from './routers/admin.router';
 import bodyParser from "body-parser";
 import { sendMail } from "./actions/mail.action";
 
@@ -34,7 +35,8 @@ AppDataSource.initialize()
 
 // API routes
 server.use('/api/auth', authRouter);
+server.use('/api/admin', adminRouter);
 
-server.listen(3000, () => {
+server.listen(3001, () => {
     console.log('server is running');
 });

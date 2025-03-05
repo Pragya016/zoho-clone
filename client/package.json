@@ -16,6 +16,7 @@
     "@mui/material": "^6.4.6",
     "@mui/styles": "^6.4.6",
     "axios": "^1.8.1",
+    "convert-csv-to-json": "^2.50.0",
     "firebase": "^11.4.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

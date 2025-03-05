@@ -1,86 +1,19 @@
 import { useState, FormEvent, useEffect, BaseSyntheticEvent } from "react";
-// import GoogleIcon from "@mui/icons-material/Google";
-// import { signInWithPopup } from "firebase/auth";
-// import { auth, provider } from "../config/firebase";
-import { makeStyles } from "@mui/styles";
 import { Alert, Button, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { fetchData } from "../utility";
 import logo from "../assets/zoho-logo.png";
 import { ResponseInterface } from "./SignInCard";
+import styles from "./css/signup.module.css";
 
 export interface FormDataInterface {
-  name: string,
-  email: string,
-  password: string
+  name: string;
+  email: string;
+  password: string;
 }
 
-const useStyles = makeStyles({
-  backdrop: {
-    background: "white",
-    height: "100svh",
-    width: "100svw",
-    overflow: "hidden",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  card: {
-    borderRadius: "15px",
-    padding: "2rem",
-    width: "40vw",
-  },
-  logo: {
-    height: "50px",
-    width: "130px",
-    marginLeft: "2rem",
-  },
-  heading: {
-    margin: "1rem 0 0 0",
-    textAlign: "center",
-  },
-  text1: {
-    margin: 0,
-  },
-  form: {
-    display: "flex",
-    justifyContent: "center",
-    flexDirection: "column",
-    margin: "2rem 0",
-  },
-  buttonContainer: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  text: {
-    color: "grey",
-    margin: "2rem 0 0 0",
-    textAlign: "center",
-  },
-  redirectLink: {
-    cursor: "pointer",
-    color: "blue",
-  },
-  googleIcon: {
-    marginRight: "5px",
-  },
-  nav: {
-    position: "absolute",
-    top: 0,
-    width: "100svw",
-    margin: "auto",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "1rem",
-    borderBottom: "1px solid lightgrey",
-  },
-});
-
-const initialState = {name: '', email: '', password: ''};
+const initialState = { name: "", email: "", password: "" };
 function SignUpCard() {
-  const styles = useStyles();
   const [formData, setFormData] = useState<FormDataInterface>(initialState);
   const navigate = useNavigate();
   const [error, setError] = useState<string>("");
@@ -109,15 +42,16 @@ function SignUpCard() {
     try {
       e.preventDefault();
       const res = await fetchData("/api/auth/new", "POST", {
-        ...formData, role: 'admin'
+        ...formData,
+        role: "admin",
       });
 
       if ((res as ResponseInterface).status !== 200) {
-        setError((res as ResponseInterface).message)
+        setError((res as ResponseInterface).message);
         return;
       }
 
-      setFormData(initialState)
+      setFormData(initialState);
       navigate("/sign-in");
     } catch (error: unknown) {
       console.error(error);
@@ -127,25 +61,16 @@ function SignUpCard() {
   function handleChange(e: BaseSyntheticEvent) {
     const name = e.target.name;
     const value = e.target.value;
-    setFormData({...formData, [name]: value});
-    if(error) {
-      setError('');
+    setFormData({ ...formData, [name]: value });
+    if (error) {
+      setError("");
     }
-  } 
-
-  // async function handleGoogleLogin() {
-  //   try {
-  //     const result = await signInWithPopup(auth, provider);
-  //     console.log("Logged in with Google!", result);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
+  }
 
   return (
-    <div className={styles.backdrop}>
-      <nav className={styles.nav}>
-        <img src={logo} alt="logo" className={styles.logo} />
+    <div id={styles.backdrop}>
+      <nav id={styles.nav}>
+        <img src={logo} alt="logo" id={styles.logo} />
         <div>
           Already have a Zoho account?
           <Button
@@ -156,15 +81,19 @@ function SignUpCard() {
           </Button>
         </div>
       </nav>
-      <div className={styles.card}>
+      <div id={styles.card}>
         <div>
-          <h1 className={styles.heading}>
+          <h1 id={styles.heading}>
             Start with your free account today.
           </h1>
         </div>
-        <form onSubmit={handleCreateUser} className={styles.form}>
-          {error && <Alert severity="error" sx={{marginBottom: '1.5rem'}}>{error}</Alert>}
-          <label htmlFor="name" style={{ color: "grey" }}>
+        <form onSubmit={handleCreateUser} id={styles.form}>
+          {error && (
+            <Alert severity="error" sx={{ marginBottom: "1.5rem" }}>
+              {error}
+            </Alert>
+          )}
+          <label htmlFor="name" className={styles.label}>
             Name
           </label>
           <TextField
@@ -176,7 +105,7 @@ function SignUpCard() {
             onChange={handleChange}
             required
           />
-          <label htmlFor="email" style={{ color: "grey" }}>
+          <label htmlFor="email" className={styles.label}>
             Email
           </label>
           <TextField
@@ -188,7 +117,7 @@ function SignUpCard() {
             onChange={handleChange}
             required
           />
-          <label htmlFor="password" style={{ color: "grey" }}>
+          <label htmlFor="password" className={styles.label}>
             Password
           </label>
           <TextField
@@ -207,11 +136,6 @@ function SignUpCard() {
             SIGN UP FOR FREE
           </Button>
         </form>
-        {/* <div className={styles.buttonContainer}>
-          <Button sx={{border: '2px solid lightgrey', color: 'grey'}} onClick={handleGoogleLogin}>
-            <GoogleIcon className={styles.googleIcon}/> Sign in using Google
-          </Button>
-        </div> */}
       </div>
     </div>
   );

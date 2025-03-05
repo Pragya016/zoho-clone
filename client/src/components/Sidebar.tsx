@@ -11,7 +11,9 @@ import logo from '../assets/zoho-logo.png';
 import { BaseSyntheticEvent, useState } from "react";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import userImage from '../assets/default-user-icon.jpg'
 import styles from './css/sidebar.module.css';
+import { useUser } from "../context/User";
 
 // TODO: Change styles for the selected column
 interface Active {
@@ -24,6 +26,7 @@ export default function SidebarMenu() {
   const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [isActive, setIsActive] = useState<Active>(initialState);
+  const {admin} = useUser();
 
   function handleLogoutUser() {
     localStorage.removeItem('idToken');    
@@ -44,11 +47,11 @@ export default function SidebarMenu() {
         </IconButton>
         <img src={logo} alt="logo" id={styles.logo} style={{opacity: isCollapsed ? '0' : '1'}}/>
       </div>
-      <hr />
-      <div id={styles.middleContainer}>
-        <img src="user-img" alt="user-image" />
-        <h1>Admin</h1>
-        <p>example@gmail.com</p>
+      <div id={styles.userContainer}>
+        <img src={userImage} alt="user-image" id={styles.userProfile}/>
+        <h1 id={styles.username}>{admin?.name || 'Admin'}</h1>
+        <p id={styles.userEmail}><b>{admin?.email || 'admin@example.com'}</b></p>
+        <p id={styles.text}>Logged in as {admin?.role}</p>
       </div>
         <MenuItem id="tasks" onClick={handleClick} icon={<PlaylistAddCheckIcon/>} style={{background: isActive.tasks ? 'lightgrey' : 'inherit' }}>Tasks Management </MenuItem>
         <MenuItem onClick={handleClick} style={{background: isActive.tasks ? 'lightgrey' : 'inherit' }} icon={<PeopleIcon />}> Customer Relationship Management </MenuItem>
@@ -59,7 +62,6 @@ export default function SidebarMenu() {
         </SubMenu>
       </Menu>
         <div id={styles.logoutButtonContainer}>
-            <hr />
             <LogoutModal onLogout={handleLogoutUser}/>
         </div>
     </Sidebar>

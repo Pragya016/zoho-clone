@@ -7,12 +7,13 @@ import bcrypt from "bcrypt";
 import { sendMail } from "../actions/mail.action";
 config();
 
+// TODO: Uncomment send mail function
 const userRepository = AppDataSource.getRepository(User);
 
 export async function verifyToken(req: Request, res: Response) {
   // const idToken = req.headers.authorization?.split("Bearer ")[1];
   const { idToken } = req.query;
-
+  console.log(idToken);
   if (!idToken) {
     return res.status(401).send({ message: "You are not authorized to view this page" });
   }

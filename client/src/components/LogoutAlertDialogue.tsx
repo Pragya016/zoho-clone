@@ -4,7 +4,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+import LogoutIcon from '@mui/icons-material/Logout';
 
 interface Props {
   onLogout: () => void;
@@ -28,7 +28,7 @@ export default function LogoutAlertDialog({ onLogout }: Props) {
 
   return (
     <React.Fragment>
-      <Button variant="outlined" onClick={handleClickOpen}>
+      <Button onClick={handleClickOpen} startIcon={<LogoutIcon />} sx={{color: '#F0483D'}}>
         Logout
       </Button>
       <Dialog

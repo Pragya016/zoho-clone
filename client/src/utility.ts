@@ -2,7 +2,7 @@ import axios from "axios";
 
 export async function fetchData(endpoint: string, method: string, data?: object) {
     try {
-        const baseUrl = import.meta.VITE_BACKEND_URL as ImportMeta || 'http://localhost:3000';
+        const baseUrl = import.meta.VITE_BACKEND_URL as ImportMeta || 'http://localhost:3001';
         let result;
 
         switch(method) {
