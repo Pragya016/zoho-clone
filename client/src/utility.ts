@@ -14,6 +14,7 @@ export async function fetchData(endpoint: string, method: string, data?: object)
                 return result;
         }
     } catch (error: unknown) {
-        return error;
+        const response = error.response.data;
+        return {message: response.message, status: error.status};
     }
 }

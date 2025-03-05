@@ -8,13 +8,16 @@
     justify-content: flex-end;
 }
 
-#collapseButton {
-
+#topContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 1rem;
 }
 
 #logo {
-    height: 30%;
-    width: 50%;
+    height: 20%;
+    width: 40%;
     transition: 0.3s;
 }
 

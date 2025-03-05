@@ -7,7 +7,7 @@ import { Alert, Button, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { fetchData } from "../utility";
 import logo from '../assets/zoho-logo.png';
-import { User, useUser } from "../context/User";
+import { useUser, Admin } from "../context/User";
 
 interface FormDataInterface {
   email: string;
@@ -15,16 +15,16 @@ interface FormDataInterface {
 }
 
 export interface ResponseInterface {
-  data: {
-    status: string;
-    token: string;
-    message: string;
-  },
+  token: string;
+  message: string;
   status: number;
+  data: {
+    [key: string]: string;
+  }
 }
 
-interface UserInterface {
-  data: User;
+interface AdminInterface {
+  data: Admin;
 }
 
 const useStyles = makeStyles({
@@ -86,7 +86,7 @@ function SignInCard(){
   const [formData, setFormData] = useState<FormDataInterface>(initialState);
   const navigate = useNavigate();
   const [error, setError] = useState<string>('');
-  const {setUser} = useUser();
+  const {setAdmin} = useUser();
 
   useEffect(() => {
     const token = localStorage.getItem('idToken');
@@ -100,9 +100,8 @@ function SignInCard(){
   async function handleRedirect(token : string) {
     try {
       const res = await fetchData(`/api/auth?idToken=${token}`, 'GET');
-      console.log(res);
       if((res as ResponseInterface).status === 200) {
-        setUser((res as UserInterface).data);
+        setAdmin((res as AdminInterface).data);
         navigate('/');
       }
 
@@ -115,8 +114,10 @@ function SignInCard(){
     try {
       e.preventDefault();
       const res = await fetchData('/api/auth', 'POST', formData)
-      if(res && (res as ResponseInterface).data.status === 'rejected') {
-        setError((res as ResponseInterface).data.message);
+
+      if(res && (res as ResponseInterface).status !== 200) {
+        console.log(res);
+        setError((res as ResponseInterface).message);
         setFormData(initialState);
         return;
       }

@@ -112,8 +112,8 @@ function SignUpCard() {
         ...formData, role: 'admin'
       });
 
-      if ((res as ResponseInterface).data.status === 'rejected') {
-        setError((res as ResponseInterface).data.message)
+      if ((res as ResponseInterface).status !== 200) {
+        setError((res as ResponseInterface).message)
         return;
       }
 

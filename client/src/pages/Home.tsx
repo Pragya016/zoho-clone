@@ -4,16 +4,16 @@ import { useEffect } from "react";
 import SidebarMenu from "../components/Sidebar";
 import { Box } from "@mui/material";
 import { ResponseInterface } from "../components/SignInCard";
-import { User, useUser } from "../context/User";
+import { Admin, useUser } from "../context/User";
 
-interface UserInterface {
-  data: User;
+interface AdminInterface {
+  data: Admin;
 }
 
 export default function Home() {
     const navigate = useNavigate();
-    const {user, setUser} = useUser();
-    console.log('user data ----', user);
+    const {admin, setAdmin} = useUser();
+    console.log(admin);
     useEffect(() => {
       const token = localStorage.getItem('idToken');
       if(!token) navigate('/sign-in');
@@ -31,7 +31,7 @@ export default function Home() {
             navigate('/sign-in');
         }
 
-        setUser((res as UserInterface).data)
+        setAdmin((res as AdminInterface).data)
       } catch (error) {
         console.log(error);
         navigate('/sign-in');

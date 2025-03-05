@@ -13,6 +13,7 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import styles from './css/sidebar.module.css';
 
+// TODO: Change styles for the selected column
 interface Active {
   [type: string]: boolean;
 }
@@ -37,13 +38,18 @@ export default function SidebarMenu() {
   return (
     <Sidebar id={styles.sidebar} width="350px" collapsed={isCollapsed}>
         <Menu>
-      {/* <div id={styles.collapseButtonContainer}> */}
-      <IconButton onClick={() => setIsCollapsed(prevState => !prevState)} id={styles.collapseButton}>
-        {isCollapsed ? <ArrowForwardIosIcon /> : <ArrowBackIosNewIcon />}
-      </IconButton>
-      {/* </div> */}
-      <img src={logo} alt="logo" id={styles.logo} style={{opacity: isCollapsed ? '0' : '1'}}/>
+      <div id={styles.topContainer}>
+        <IconButton onClick={() => setIsCollapsed(prevState => !prevState)} id={styles.collapseButton}>
+          {isCollapsed ? <ArrowForwardIosIcon /> : <ArrowBackIosNewIcon />}
+        </IconButton>
+        <img src={logo} alt="logo" id={styles.logo} style={{opacity: isCollapsed ? '0' : '1'}}/>
+      </div>
       <hr />
+      <div id={styles.middleContainer}>
+        <img src="user-img" alt="user-image" />
+        <h1>Admin</h1>
+        <p>example@gmail.com</p>
+      </div>
         <MenuItem id="tasks" onClick={handleClick} icon={<PlaylistAddCheckIcon/>} style={{background: isActive.tasks ? 'lightgrey' : 'inherit' }}>Tasks Management </MenuItem>
         <MenuItem onClick={handleClick} style={{background: isActive.tasks ? 'lightgrey' : 'inherit' }} icon={<PeopleIcon />}> Customer Relationship Management </MenuItem>
         <SubMenu onClick={handleClick} style={{background: isActive.tasks ? 'lightgrey' : 'inherit' }} label="Reports and Analytics" icon={<BarChartIcon />}>

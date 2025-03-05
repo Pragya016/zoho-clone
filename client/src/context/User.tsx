@@ -4,7 +4,7 @@ interface ProviderInterface {
     children: React.ReactNode;
 }
 
-export interface User {
+export interface Admin {
     id: number;
     name: string;
     email: string;
@@ -12,24 +12,24 @@ export interface User {
     status: string;
 }
 
-interface UserInterface {
-    user: User | null;
+interface AdminInterface {
+    admin: Admin | null;
     // setUser: React.Dispatch<React.SetStateAction<User | null>>;
-    setUser: (user: User) => void;
+    setAdmin: (admin: Admin) => void;
 }
 
-const dummyUser: UserInterface = {
-    user: null,
-    setUser: () => {}
+const dummyUser: AdminInterface = {
+    admin: null,
+    setAdmin: () => {}
 };
 
-const UserContext = createContext<UserInterface>(dummyUser);
+const UserContext = createContext<AdminInterface>(dummyUser);
 
 export function UserProvider({ children }: ProviderInterface) {
-    const [user, setUser] = useState<User | null>(null);
+    const [admin, setAdmin] = useState<Admin | null>(null);
 
     return (
-        <UserContext.Provider value={{ user, setUser }}>
+        <UserContext.Provider value={{ admin, setAdmin }}>
             {children}
         </UserContext.Provider>
     );
