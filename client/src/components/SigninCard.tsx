@@ -1,16 +1,30 @@
 import { useState, FormEvent, useEffect, BaseSyntheticEvent } from "react";
-import GoogleIcon from '@mui/icons-material/Google';
-import { signInWithPopup } from "firebase/auth";
-import { auth, provider } from "../config/firebase";
+// import GoogleIcon from '@mui/icons-material/Google';
+// import { signInWithPopup } from "firebase/auth";
+// import { auth, provider } from "../config/firebase";
 import { makeStyles } from "@mui/styles";
 import { Alert, Button, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { fetchData } from "../utility";
 import logo from '../assets/zoho-logo.png';
+import { User, useUser } from "../context/User";
 
 interface FormDataInterface {
   email: string;
   password: string
+}
+
+export interface ResponseInterface {
+  data: {
+    status: string;
+    token: string;
+    message: string;
+  },
+  status: number;
+}
+
+interface UserInterface {
+  data: User;
 }
 
 const useStyles = makeStyles({
@@ -72,6 +86,7 @@ function SignInCard(){
   const [formData, setFormData] = useState<FormDataInterface>(initialState);
   const navigate = useNavigate();
   const [error, setError] = useState<string>('');
+  const {setUser} = useUser();
 
   useEffect(() => {
     const token = localStorage.getItem('idToken');
@@ -85,8 +100,9 @@ function SignInCard(){
   async function handleRedirect(token : string) {
     try {
       const res = await fetchData(`/api/auth?idToken=${token}`, 'GET');
-      
-      if(res?.status === 200) {
+      console.log(res);
+      if((res as ResponseInterface).status === 200) {
+        setUser((res as UserInterface).data);
         navigate('/');
       }
 
@@ -99,12 +115,13 @@ function SignInCard(){
     try {
       e.preventDefault();
       const res = await fetchData('/api/auth', 'POST', formData)
-      if(res && res.data.status === 'rejected') {
-        setError(res.data.message);
+      if(res && (res as ResponseInterface).data.status === 'rejected') {
+        setError((res as ResponseInterface).data.message);
+        setFormData(initialState);
         return;
       }
 
-      localStorage.setItem('idToken', res && res.data.token);
+      localStorage.setItem('idToken', (res as ResponseInterface).data.token);
       setFormData(initialState);
       navigate('/');
     } catch (error: unknown) {
@@ -112,14 +129,14 @@ function SignInCard(){
     }
   };
 
-  async function handleGoogleLogin() {
-    try {
-      const result = await signInWithPopup(auth, provider);
-      console.log("Logged in with Google!", result);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // async function handleGoogleLogin() {
+  //   try {
+  //     const result = await signInWithPopup(auth, provider);
+  //     console.log("Logged in with Google!", result);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   function handleChange(e: BaseSyntheticEvent) {
     const name = e.target.name;
@@ -164,11 +181,11 @@ function SignInCard(){
           />
           <Button sx={{margin: '1rem 0', background: '#F0483D', fontWeight: 600}} variant="contained" type="submit">Sign in</Button>
         </form>
-        <div className={styles.buttonContainer}>
+        {/* <div className={styles.buttonContainer}>
           <Button sx={{border: '2px solid lightgrey', color: 'grey'}} onClick={handleGoogleLogin}>
             <GoogleIcon className={styles.googleIcon}/> Sign in using Google
           </Button>
-        </div>
+        </div> */}
         <p className={styles.text}>Don't have a Zoho account? <b className={styles.redirectLink} onClick={() => navigate('/sign-up')}>Sign up now</b></p>
       </div>
     </div>

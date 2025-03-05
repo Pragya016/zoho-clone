@@ -1,0 +1,25 @@
+#sidebar {
+    height: 100svh;
+}
+
+#collapseButtonContainer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+#collapseButton {
+
+}
+
+#logo {
+    height: 30%;
+    width: 50%;
+    transition: 0.3s;
+}
+
+#logoutButtonContainer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}

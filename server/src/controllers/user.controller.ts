@@ -22,7 +22,14 @@ export async function verifyToken(req: Request, res: Response) {
     // const decodedToken = await admin.auth().verifyIdToken(idToken);
     // @ts-ignore
     const decodedToken = await jwt.verify(idToken, process.env.SECRET_KEY);
-    res.status(200).send(decodedToken);
+    const response = {
+      id: decodedToken.id,
+      name: decodedToken.name,
+      email: decodedToken.email,
+      role: decodedToken.role,
+      status: 'success'
+    }
+    res.status(200).send(response);
   } catch (error) {
     // return res.status(403).send({ error: "Invalid token", status: 'success' });
     return res.send({ error: "Invalid token", status: 'rejected' });

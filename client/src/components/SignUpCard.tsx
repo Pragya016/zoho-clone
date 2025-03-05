@@ -7,6 +7,7 @@ import { Alert, Button, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { fetchData } from "../utility";
 import logo from "../assets/zoho-logo.png";
+import { ResponseInterface } from "./SignInCard";
 
 export interface FormDataInterface {
   name: string,
@@ -96,7 +97,7 @@ function SignUpCard() {
     try {
       const res = await fetchData(`/api/auth?idToken=${token}`, "GET");
 
-      if (res?.status === 200) {
+      if ((res as ResponseInterface).status === 200) {
         navigate("/");
       }
     } catch (error) {
@@ -111,8 +112,8 @@ function SignUpCard() {
         ...formData, role: 'admin'
       });
 
-      if (res && res.data.status === 'rejected') {
-        setError(res.data.message)
+      if ((res as ResponseInterface).data.status === 'rejected') {
+        setError((res as ResponseInterface).data.message)
         return;
       }
 
@@ -124,7 +125,6 @@ function SignUpCard() {
   }
 
   function handleChange(e: BaseSyntheticEvent) {
-    console.log(e.target.value, e.target.name);
     const name = e.target.name;
     const value = e.target.value;
     setFormData({...formData, [name]: value});
