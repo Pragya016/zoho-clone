@@ -8,10 +8,25 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import UploadIcon from '@mui/icons-material/Upload';
 import { fetchData } from "../utility";
+import SimpleTable from "./EmployeesTable";
+import BasicTable from "./BasicTable";
+
+export interface Employees {
+  employees: Employee[];
+  setEmployees: (employee: Employee[]) => void;
+}
+
+interface Employee {
+  [key: string]: string | number;
+}
+
+interface ResponseInterface {
+  data: {[key: string]: string | number}[];
+}
 
 export default function CRMTab() {
   const [search, setSearch] = useState<string>("");
-  const [file, setFile] = useState<FormData | null>(null);
+  const [employees, setEmployees] = useState<Employees>([]);
   const fileInputRef = useRef(null);
 
   function handleChange(e: BaseSyntheticEvent) {
@@ -25,13 +40,11 @@ export default function CRMTab() {
   }
 
   function handleFileChange(e: BaseSyntheticEvent) {
-    // setFile(e.target.files[0]);
     uploadData(e.target.files[0]);
   }
 
   async function uploadData(file: FormData){
     try {
-      console.log(file);
       const formData = new FormData();
       formData.append('employees-data', file);
       const res = await fetchData('/api/admin/upload', 'POST', formData, {
@@ -39,7 +52,8 @@ export default function CRMTab() {
           'Content-Type': 'multipart/form-data'
         }
       });
-      console.log(formData, res);
+      
+      setEmployees(res.data);
     } catch (error) {
       console.error(error);
     }
@@ -65,7 +79,8 @@ export default function CRMTab() {
         </form>
         <Button onClick={handleUpload} startIcon={<UploadIcon />}>Upload File</Button>
         <input type="file" onChange={handleFileChange} name="employees" id="fileInput" ref={fileInputRef} hidden={true}/>
-        {/* <TextField type="file" variant="outlined" ref={fileInputRef} /> */}
+        {/* <SimpleTable employees={employees}/> */}
+        {employees.length > 0 && <BasicTable employees={employees}/>}
       </div>
     </div>
   );

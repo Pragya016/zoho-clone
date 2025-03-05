@@ -13,8 +13,8 @@ interface AdminInterface {
 
 export default function Home() {
     const navigate = useNavigate();
-    const {admin, setAdmin} = useUser();
-    console.log(admin);
+    const {setAdmin} = useUser();
+
     useEffect(() => {
       const token = localStorage.getItem('idToken');
       if(!token) navigate('/sign-in');
