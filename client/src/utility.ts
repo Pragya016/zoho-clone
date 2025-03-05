@@ -1,13 +1,18 @@
 import axios from "axios";
 
-export async function fetchData(endpoint: string, method: string, data?: object) {
+export async function fetchData(endpoint: string, method: string, data?: object, headers?: object) {
     try {
         const baseUrl = import.meta.VITE_BACKEND_URL as ImportMeta || 'http://localhost:3001';
         let result;
 
         switch(method) {
             case 'POST':
-                result = await axios.post(baseUrl + endpoint, data);
+                if(!headers) {
+                    result = await axios.post(baseUrl + endpoint, data);
+                    return result;
+                }
+
+                result = await axios.post(baseUrl + endpoint, data, headers);
                 return result;
             default: 
                 result = await axios.get(baseUrl + endpoint);

@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import UploadIcon from '@mui/icons-material/Upload';
-import csvToJson from 'convert-csv-to-json';
+import { fetchData } from "../utility";
 
 export default function CRMTab() {
   const [search, setSearch] = useState<string>("");
@@ -25,16 +25,26 @@ export default function CRMTab() {
   }
 
   function handleFileChange(e: BaseSyntheticEvent) {
-    setFile(e.target.files[0]);
-    const json = csvToJson.getJsonFromCsv(e.target.files[0]);
-        for(let i=0; i<json.length;i++){
-        console.log(json[i]);
-    }
-
-    console.log(json);
+    // setFile(e.target.files[0]);
+    uploadData(e.target.files[0]);
   }
 
-  console.log(file);
+  async function uploadData(file: FormData){
+    try {
+      console.log(file);
+      const formData = new FormData();
+      formData.append('employees-data', file);
+      const res = await fetchData('/api/admin/upload', 'POST', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      console.log(formData, res);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <div id={styles.content}>
       <div id={styles.topContainer}>
