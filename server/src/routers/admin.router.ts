@@ -17,7 +17,6 @@ router.route('/:userId')
 })
 
 router.post('/upload', upload.single('employees-data'), (req: Request, res: Response) => {
-    console.log('endpoint hit');
     handleFileUpload(req, res);
 })
 

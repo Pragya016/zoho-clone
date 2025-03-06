@@ -34,7 +34,7 @@ export default function Home() {
 
         setAdmin((res as AdminInterface).data)
       } catch (error) {
-        console.log(error);
+        console.error(error);
         navigate('/sign-in');
       }
     }

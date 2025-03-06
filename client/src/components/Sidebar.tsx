@@ -34,7 +34,6 @@ export default function SidebarMenu() {
   }
 
   function handleClick(e: BaseSyntheticEvent) {
-    console.log(e);
     setIsActive({ ...isActive });
   }
 

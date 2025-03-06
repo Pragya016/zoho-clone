@@ -28,7 +28,6 @@ export default function CRMTab() {
     try {
       if(admin){
         const res = await fetchData(`/api/admin?adminId=${admin.id}`, 'GET');
-        console.log(res);
         dispatch(addEmployee(res.data));
       }
     } catch (error) {
@@ -54,7 +53,6 @@ export default function CRMTab() {
     try {
       const formData = new FormData();
       formData.append('employees-data', file);
-      console.log(formData, admin);
       const res = await fetchData(`/api/admin/upload?id=${admin?.id}`, 'POST', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'

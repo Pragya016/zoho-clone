@@ -20,7 +20,6 @@ export async function fetchData(endpoint: string, method: string, data?: object,
                 return result;
 
             case 'PATCH': 
-                console.log(baseUrl + endpoint);
                 result = await axios.patch(baseUrl + endpoint, data);
                 return result;
             default: 

@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import fs from "fs";
 import csv from "csv-parser";
-// import { Employee } from "../entity/Employee";
 import { AppDataSource } from "../database/datasource";
 import { User } from "../entity/User";
 import bcrypt from 'bcrypt';
@@ -81,23 +80,24 @@ export async function handleGetUsers(req: Request, res: Response) {
     }
 }
 
+
 export async function handleUpdateUser(req: Request, res: Response) {
     try {
-        const {userId} = req.params
+        const { userId } = req.params;
         const data = req.body;
-        const user = await userRepository.findOneBy({id: +userId, role: 'user'});
 
-        if(!user) {
-            return res.status(404).send({message: 'User not found'});
+        // Find user by ID
+        const user = await userRepository.findOneBy({ id: +userId, role: 'user' });
+        if (!user) {
+            return res.status(404).send({ message: 'User not found' });
         }
 
         user.name = data.name;
-        user.email = data.email;
         await userRepository.save(user);
-        res.status(200).send({message: 'User data updated successfully', response: user});
+        res.status(200).send({ message: 'User data updated successfully', response: user });
     } catch (error) {
-        res.status(500).send({message: 'Internal server error'});
         console.log(error);
+        res.status(500).send({ message: 'Internal server error' });
     }
 }
 

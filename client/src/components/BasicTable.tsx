@@ -11,7 +11,6 @@ export default function BasicTable() {
     const employees = useSelector(state => state.employees);
     const headings = [...Object.keys(employees[0])];
     const dispatch = useDispatch();
-    console.log(employees);
 
     useEffect(() => {
         getUsers();

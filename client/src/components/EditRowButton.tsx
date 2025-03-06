@@ -9,6 +9,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import { Employee } from './CRMTab';
 import { Alert } from '@mui/material';
 import { fetchData } from '../utility';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateEmployees } from '../store/slices/employee.slice';
 
 interface Props {
   data: Employee;
@@ -28,6 +30,8 @@ export default function EditRowButton({data}: Props) {
   const [open, setOpen] = React.useState(false);
   const [formData, setFormData] = React.useState<FormDataInterface>(initialState);
   const [error, setError] = React.useState<string>('');
+  const dispatch = useDispatch();
+  const employees = useSelector(state => state.employees);
 
   React.useEffect(() => {
     setFormData({email: data.email, name: data.name});
@@ -67,15 +71,14 @@ export default function EditRowButton({data}: Props) {
       return;
     }
 
-    updateUser();
+    updateUserDetails();
     setFormData(initialState);
   }
 
-  async function updateUser() {
+  async function updateUserDetails() {
     try {
-      console.log(data);
         const res = await fetchData(`/api/admin/${data.id}`, 'PATCH', formData);
-        console.log(res);
+        dispatch(updateEmployees(res.data.response));
         setOpen(false);
     } catch (error) {
         console.error(error);
