@@ -1,19 +1,22 @@
 import * as React from 'react';
 import Popover from '@mui/material/Popover';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import DeleteRowButton from './DeleteRowButton';
+import EditRowButton, { FormDataInterface } from './EditRowButton';
+import { Employee } from './CRMTab';
+import { useDispatch } from 'react-redux';
 
 interface PopoverProps {
-  onDelete: (id: number) => void;
+  data: Employee;
 }
 
-export default function TablePopover({onDelete}: PopoverProps) {
+export default function TablePopover({data}: PopoverProps) {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
+  const dispatch = useDispatch();
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -21,10 +24,6 @@ export default function TablePopover({onDelete}: PopoverProps) {
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
-
-  function handleDelete(id: number) {
-    onDelete(id);
-  }
 
   return (
     <div>
@@ -39,12 +38,9 @@ export default function TablePopover({onDelete}: PopoverProps) {
           horizontal: 'left',
         }}
       >
-        {/* <ul>
-          <li>Edit</li>
-          <li>Delete</li>
-        </ul> */}
-        <p>Edit</p>
-        <p onClick={handleDelete}>Delete</p>
+        {/* <Button onClick={handleEdit}>Edit</Button> */}
+        <EditRowButton data={data}/>
+        <DeleteRowButton data={data}/>
       </Popover>
     </div>
   );

@@ -3,9 +3,12 @@ import SignInCard from './components/SignInCard'
 import Home from './pages/Home';
 import SignUpCard from './components/SignUpCard';
 import { AdminProvider } from './context/Admin';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 
 function App() {
   return (
+    <Provider store={store}>
     <AdminProvider>
       <BrowserRouter>
         <Routes>
@@ -15,6 +18,7 @@ function App() {
         </Routes>
       </BrowserRouter>
     </AdminProvider>
+    </Provider>
   )
 }
 

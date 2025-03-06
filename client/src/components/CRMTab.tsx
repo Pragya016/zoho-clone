@@ -8,28 +8,27 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import UploadIcon from '@mui/icons-material/Upload';
 import { fetchData } from "../utility";
-import SimpleTable from "./EmployeesTable";
 import BasicTable from "./BasicTable";
 import { useAdmin } from "../context/Admin";
+import { useDispatch, useSelector } from "react-redux";
+import { addEmployee } from "../store/slices/employee.slice";
 
 export interface Employees {
   employees: Employee[];
   setEmployees: (employee: Employee[]) => void;
 }
 
-interface Employee {
+export interface Employee {
   [key: string]: string | number;
 }
 
-interface ResponseInterface {
-  data: {[key: string]: string | number}[];
-}
 
 export default function CRMTab() {
   const [search, setSearch] = useState<string>("");
-  const [employees, setEmployees] = useState<Employees>([]);
   const fileInputRef = useRef(null);
   const {admin} = useAdmin();
+  const employees = useSelector(state => state.employees);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     fetchEmployees();
@@ -39,7 +38,8 @@ export default function CRMTab() {
     try {
       if(admin){
         const res = await fetchData(`/api/admin?adminId=${admin.id}`, 'GET');
-        setEmployees(res.data);
+        // setEmployees(res.data);
+        dispatch(addEmployee(res.data));
       }
     } catch (error) {
       console.error(error);
@@ -70,7 +70,8 @@ export default function CRMTab() {
         }
       });
       
-      setEmployees(res.data);
+      // setEmployees(res.data);
+      dispatch(addEmployee(res.data));
     } catch (error) {
       console.error(error);
     }
@@ -92,13 +93,13 @@ export default function CRMTab() {
             }}
           />
         </FormControl>
-        <Button variant="contained" type="submit">Search</Button>
+        <Button variant="contained" id={styles.searchButton} type="submit">Search</Button>
         </form>
         <Button onClick={handleUpload} startIcon={<UploadIcon />}>Upload File</Button>
         <input type="file" onChange={handleFileChange} name="employees" id="fileInput" ref={fileInputRef} hidden={true}/>
         {/* <SimpleTable employees={employees}/> */}
-        {employees.length > 0 && <BasicTable employees={employees}/>}
       </div>
+        {employees.length > 0 && <BasicTable/>}
     </div>
   );
 }

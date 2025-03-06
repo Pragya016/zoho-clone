@@ -29,8 +29,8 @@ function SignUpCard() {
   async function handleRedirect(token: string) {
     try {
       const res = await fetchData(`/api/auth?idToken=${token}`, "GET");
-
-      if ((res as ResponseInterface).status === 200) {
+      if ((res as ResponseInterface).status === 201) {
+        setFormData(initialState);
         navigate("/");
       }
     } catch (error) {
@@ -46,7 +46,7 @@ function SignUpCard() {
         role: "admin",
       });
 
-      if ((res as ResponseInterface).status !== 200) {
+      if ((res as ResponseInterface).status !== 201) {
         setError((res as ResponseInterface).message);
         return;
       }

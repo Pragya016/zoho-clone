@@ -43,9 +43,7 @@ export default function Home() {
     return (
       <Box sx={{display: 'flex'}}>
       <SidebarMenu />
-      <div id="content">
-        <CRMTab />
-      </div>
+      <CRMTab />
       </Box>
     )
 }

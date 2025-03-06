@@ -5,7 +5,6 @@ import { AppDataSource } from "./database/datasource";
 import authRouter from './routers/auth.router';
 import adminRouter from './routers/admin.router';
 import bodyParser from "body-parser";
-import { sendMail } from "./actions/mail.action";
 
 const server = express();
 
@@ -37,6 +36,7 @@ AppDataSource.initialize()
 server.use('/api/auth', authRouter);
 server.use('/api/admin', adminRouter);
 
-server.listen(3001, () => {
-    console.log('server is running');
+const PORT = 3001;
+server.listen(PORT, () => {
+    console.log('server is running on PORT ', PORT);
 });

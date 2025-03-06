@@ -1,0 +1,19 @@
+#table {
+    width: 80%;
+    margin: auto;
+}
+
+.row {
+    border: 1px solid lightgrey;
+}
+
+.theading {
+    background-color: var(--cols-color2);
+    color: white;
+    padding: 1rem;
+}
+
+.cols {
+    background-color: whitesmoke;
+    padding: 1rem;
+}

@@ -1,5 +1,7 @@
 :root {
   --button-color: #F0483D; 
+  --cols-color: #006EB9;
+  --cols-color2:#F0483D;
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;

@@ -1,13 +1,25 @@
 #content {
-
+  width: 100%;
 }
 
 .searchIcon {
-    color: grey;
+  color: grey;
+}
+
+#topContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
+  margin: auto;
 }
 
 #form {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#searchButton {
+    padding: 1rem;
 }

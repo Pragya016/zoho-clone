@@ -4,15 +4,19 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
-import LogoutIcon from '@mui/icons-material/Logout';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Employee } from "./CRMTab";
+import { useDispatch } from "react-redux";
+import { fetchData } from "../utility";
+import { deleteEmployee } from "../store/slices/employee.slice";
 
 interface Props {
-  onLogout: () => void;
-  isCollapsed: boolean
+  data: Employee
 }
 
-export default function LogoutAlertDialog({ onLogout, isCollapsed }: Props) {
+export default function DeleteRowButton({ data }: Props) {
   const [open, setOpen] = React.useState(false);
+  const dispatch = useDispatch();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -22,15 +26,25 @@ export default function LogoutAlertDialog({ onLogout, isCollapsed }: Props) {
     setOpen(false);
   }
 
-  const handleLogout = () => {
-    onLogout();
+  const handleDelete = () => {
+    deleteUser(data.id);
     setOpen(false);
   };
 
+  async function deleteUser(id: number){
+    try {
+        // display a popup modal
+        const {data} = await fetchData(`/api/admin/${id}`, 'DELETE');
+        dispatch(deleteEmployee(data.response))
+    } catch (error) {
+        console.error(error);
+    }
+}
+
   return (
     <React.Fragment>
-      <Button onClick={handleClickOpen} startIcon={<LogoutIcon />} sx={{color: '#f0483d', fontWeight: 600}}>
-        <span style={{fontSize: isCollapsed ? '0.6rem' : '1rem', transition: '0.3s'}}>Logout</span>
+      <Button onClick={handleClickOpen} startIcon={<DeleteIcon />} sx={{color: '#F0483D'}}>
+        Delete
       </Button>
       <Dialog
         open={open}
@@ -40,12 +54,12 @@ export default function LogoutAlertDialog({ onLogout, isCollapsed }: Props) {
       >
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to logout?
+                Are you sure you want to delete this user? This action can't be undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleLogout} autoFocus>
+          <Button onClick={handleDelete} autoFocus>
             Yes
           </Button>
         </DialogActions>

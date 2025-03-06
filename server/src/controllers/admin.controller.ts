@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import fs from "fs";
 import csv from "csv-parser";
-import { Employee } from "../entity/Employee";
+// import { Employee } from "../entity/Employee";
 import { AppDataSource } from "../database/datasource";
 import { User } from "../entity/User";
 import bcrypt from 'bcrypt';
@@ -16,15 +16,12 @@ export async function handleFileUpload(req: Request, res: Response) {
             return res.status(400).send({ message: "No file uploaded" });
         }
 
-        const results: Employee[] = [];
+        const results: object[] = [];
 
         fs.createReadStream(file.path)
             .pipe(csv())
             .on("data", (data) => {
-                // if(!data.name || !data.email || !data.position ){
-                //     throw new Error("name, email or position field is missing");
-                // }
-
+                console.log('parsing data');
                 saveUser(data, id ? +id : null);
                 results.push(data);
             })
@@ -53,7 +50,7 @@ export async function handleDeleteUser(req: Request, res: Response) {
 
         if(user) {
             await userRepository.remove(user);
-            return res.status(200).send({message: 'User deleted successfully', data: user});
+            return res.status(200).send({message: 'User deleted successfully', response: user});
         }
 
         res.status(400).send({message: 'Something went wrong. Please try again later'})
@@ -85,8 +82,35 @@ export async function handleGetUsers(req: Request, res: Response) {
     }
 }
 
+export async function handleUpdateUser(req: Request, res: Response) {
+    try {
+        const {userId} = req.params
+        const data = req.body;
+        const user = await userRepository.findOneBy({id: +userId, role: 'user'});
+
+        if(!user) {
+            return res.status(404).send({message: 'User not found'});
+        }
+
+        user.name = data.name;
+        user.email = data.email;
+        await userRepository.save(user);
+        res.status(200).send({message: 'User data updated successfully', response: user});
+    } catch (error) {
+        res.status(500).send({message: 'Internal server error'});
+        console.log(error);
+    }
+}
+
 async function saveUser(data: any, adminId: number | null) {
     try{
+        // check if user has already been created by the same admin
+        const existingUser = await userRepository.createQueryBuilder('users').andWhere('users.adminId = :adminId OR users.email = :email', {adminId, email: data.email}).getOne();
+        if(existingUser) {
+            console.log('user has already been created', existingUser);
+            return;
+        }
+
         const hashedPassword = await bcrypt.hash(data.password || 'Abcd@1234', 10);
         const user = new User();
         user.name = data.name;
@@ -98,6 +122,6 @@ async function saveUser(data: any, adminId: number | null) {
         await userRepository.save(user);
         console.log('user saved in the databse');
     }catch(error) {
-        // console.log(error);
+        console.log(error);
     }
 }
