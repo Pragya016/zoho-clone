@@ -6,7 +6,6 @@ import { useEmployees } from '../context/Employees';
 export default function EmployeesTablePaginationDemo() {
   const allEmployees = useSelector((state) => state.employees);
   const { employees, setEmployees } = useEmployees();
-  
   const [page, setPage] = React.useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = React.useState<number>(10);
 
@@ -30,6 +29,12 @@ export default function EmployeesTablePaginationDemo() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  if(employees.length <= 0) {
+    return (
+      <h1>No data found</h1>
+    )
+  }
 
   return (
       <TablePagination

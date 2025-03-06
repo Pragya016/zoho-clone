@@ -61,6 +61,8 @@ export async function handleSignupUser(req: Request, res: Response) {
     user.email = email;
     user.password = hashedPassword;
     user.role = role;
+    user.designation = null;
+    user.department = null;
 
     await userRepository.save(user);
     // sendMail(email, name);

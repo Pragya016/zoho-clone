@@ -21,7 +21,7 @@ export default function BasicTable() {
     async function getUsers() {
         try {
             if(admin){
-                const response = await fetchData(`/api/admin?adminId=${admin?.id}`, 'GET');
+                const response = await fetchData(`/api/admin?adminId=${admin.id}`, 'GET');
                 dispatch(addEmployee(response.data));
             }
         } catch (error) {

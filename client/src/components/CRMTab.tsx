@@ -2,8 +2,8 @@ import { BaseSyntheticEvent, FormEvent, useEffect, useRef, useState } from "reac
 import styles from "./css/crm.module.css";
 import {
     Button,
-  FormControl,
-  OutlinedInput,
+    FormControl,
+    OutlinedInput,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import UploadIcon from '@mui/icons-material/Upload';
@@ -12,30 +12,27 @@ import BasicTable from "./BasicTable";
 import { useAdmin } from "../context/Admin";
 import { useDispatch, useSelector } from "react-redux";
 import { addEmployee, filterEmployees } from "../store/slices/employee.slice";
-// import UsersGrid from "./UsersGrid";
 import EmployeesTablePaginationDemo from "./EmployeesTablePagination";
-import { useEmployees } from "../context/Employees";
 
 export default function CRMTab() {
   const [search, setSearch] = useState<string>("");
-  const fileInputRef = useRef(null);
-  const {admin} = useAdmin();
-  // const employees = useSelector(state => state.employees);
-  const {employees} = useEmployees();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const { admin } = useAdmin();
+  const allEmployees = useSelector((state: any) => state.employees);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    fetchEmployees();
-  }, [admin]);
-  
+    if (admin) {
+      fetchEmployees();
+    }
+  }, [admin]); // Ensure admin is available before fetching employees
+
   async function fetchEmployees() {
     try {
-      if(admin){
-        const res = await fetchData(`/api/admin?adminId=${admin.id}`, 'GET');
-        dispatch(addEmployee(res.data));
-      }
+      const res = await fetchData(`/api/admin`, "GET");
+      dispatch(addEmployee(res.data));
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching employees:", error);
     }
   }
 
@@ -44,26 +41,37 @@ export default function CRMTab() {
   }
 
   function handleUpload() {
-      if(fileInputRef.current){
-        fileInputRef.current.click();
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
     }
   }
 
   function handleFileChange(e: BaseSyntheticEvent) {
-    uploadData(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file) {
+      uploadData(file);
+    }
   }
 
-  async function uploadData(file: FormData){
+  async function uploadData(file: File) {
     try {
+      if (!admin || !admin.id) {
+        console.error("Admin is undefined or missing ID");
+        return;
+      }
+
       const formData = new FormData();
-      formData.append('employees-data', file);
-      const res = await fetchData(`/api/admin/upload?id=${admin?.id}`, 'POST', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      
-      dispatch(addEmployee(res.data.data));
+      formData.append("employees-data", file);
+      const res = await fetchData(`/api/admin/upload?id=${admin.id}`, "POST", formData);
+
+      if(res.status === 201){
+        dispatch(addEmployee(res.data.data));
+      }
+
+      // Reset file input after successful upload
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     } catch (error) {
       console.error(error);
     }
@@ -76,14 +84,21 @@ export default function CRMTab() {
 
   async function searchData() {
     try {
-      const res = await fetchData(`/api/admin/filter?adminId=${admin.id}&q=${search.toLowerCase().trim()}`, 'GET');
-      console.log(res);
-      
-      if(res.status === 200) {
-        dispatch(filterEmployees(res.data));
+      if (!admin || !admin.id) {
+        console.error("Admin is undefined while searching");
+        return;
       }
 
-      setSearch('');
+      const res = await fetchData(
+        `/api/admin/filter?adminId=${admin.id}&q=${search.toLowerCase().trim()}`,
+        "GET"
+      );
+
+      if (res.status === 200) {
+        dispatch(filterEmployees(res.data.data));
+      }
+
+      setSearch("");
     } catch (error) {
       console.error(error);
     }
@@ -93,29 +108,39 @@ export default function CRMTab() {
     <div id={styles.content}>
       <div id={styles.topContainer}>
         <form id={styles.form} onSubmit={handleSearch}>
-        <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
-          <OutlinedInput
-            id="outlined-adornment-weight"
-            value={search}
-            onChange={handleChange}
-            startAdornment={<SearchIcon className={styles.searchIcon}/>}
-            aria-describedby="outlined-weight-helper-text"
-            inputProps={{
-              "aria-label": "weight",
-            }}
-          />
-        </FormControl>
-        <Button variant="contained" id={styles.searchButton} type="submit">Search</Button>
+          <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
+            <OutlinedInput
+              id="outlined-adornment-weight"
+              value={search}
+              onChange={handleChange}
+              startAdornment={<SearchIcon className={styles.searchIcon} />}
+              aria-describedby="outlined-weight-helper-text"
+              inputProps={{
+                "aria-label": "search",
+              }}
+            />
+          </FormControl>
+          <Button variant="contained" id={styles.searchButton} type="submit">
+            Search
+          </Button>
         </form>
-        <Button onClick={handleUpload} startIcon={<UploadIcon />}>Upload File</Button>
-        <input type="file" onChange={handleFileChange} name="employees" id="fileInput" ref={fileInputRef} hidden={true}/>
+        <Button onClick={handleUpload} startIcon={<UploadIcon />}>
+          Upload File
+        </Button>
+        <input
+          type="file"
+          onChange={handleFileChange}
+          name="employees"
+          id="fileInput"
+          ref={fileInputRef}
+          hidden
+        />
       </div>
-        <div>
-          {employees.length > 0 && <h1 id={styles.heading}>Employees Table</h1>}
-          <BasicTable/>
-          <EmployeesTablePaginationDemo />
-          {/* <UsersGrid /> */}
-        </div>
+      <div>
+        {allEmployees.length > 0 && <h1 id={styles.heading}>Employees Table</h1>}
+        <BasicTable />
+        {allEmployees.length > 0 && <EmployeesTablePaginationDemo />}
+      </div>
     </div>
   );
 }
