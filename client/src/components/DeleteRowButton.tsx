@@ -4,14 +4,13 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
-import DeleteIcon from '@mui/icons-material/Delete';
-import { Employee } from "./CRMTab";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch } from "react-redux";
 import { fetchData } from "../utility";
 import { deleteEmployee } from "../store/slices/employee.slice";
 
 interface Props {
-  data: Employee
+  data: [{ [key: string]: string }];
 }
 
 export default function DeleteRowButton({ data }: Props) {
@@ -24,26 +23,30 @@ export default function DeleteRowButton({ data }: Props) {
 
   const handleClose = () => {
     setOpen(false);
-  }
+  };
 
   const handleDelete = () => {
     deleteUser(data.id);
     setOpen(false);
   };
 
-  async function deleteUser(id: number){
+  async function deleteUser(id: number) {
     try {
-        // display a popup modal
-        const {data} = await fetchData(`/api/admin/${id}`, 'DELETE');
-        dispatch(deleteEmployee(data.response))
+      // display a popup modal
+      const { data } = await fetchData(`/api/admin/${id}`, "DELETE");
+      dispatch(deleteEmployee(data.response));
     } catch (error) {
-        console.error(error);
+      console.error(error);
     }
-}
+  }
 
   return (
     <React.Fragment>
-      <Button onClick={handleClickOpen} startIcon={<DeleteIcon />} sx={{color: '#F0483D'}}>
+      <Button
+        onClick={handleClickOpen}
+        startIcon={<DeleteIcon />}
+        sx={{ color: "grey" }}
+      >
         Delete
       </Button>
       <Dialog
@@ -54,7 +57,8 @@ export default function DeleteRowButton({ data }: Props) {
       >
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-                Are you sure you want to delete this user? This action can't be undone.
+            Are you sure you want to delete this user? This action can't be
+            undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

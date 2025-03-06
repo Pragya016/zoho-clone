@@ -11,7 +11,7 @@
   align-items: center;
   justify-content: space-between;
   width: 90%;
-  margin: auto;
+  margin: 2rem auto;
 }
 
 #form {
@@ -22,4 +22,10 @@
 
 #searchButton {
     padding: 1rem;
+}
+
+#heading {
+  color: grey;
+  text-align: center;
+  margin-top: 4rem;
 }

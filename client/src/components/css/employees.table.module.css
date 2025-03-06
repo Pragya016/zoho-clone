@@ -1,6 +1,6 @@
 #table {
     width: 80%;
-    margin: auto;
+    margin: 2rem auto auto auto;
 }
 
 .row {
@@ -11,9 +11,23 @@
     background-color: var(--cols-color2);
     color: white;
     padding: 1rem;
+    width: 10px;
 }
 
 .cols {
     background-color: whitesmoke;
     padding: 1rem;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 70svh;
+    color: rgb(164, 164, 164);
+}
+
+#text {
+    margin: 0;
 }

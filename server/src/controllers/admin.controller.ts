@@ -102,16 +102,24 @@ export async function handleUpdateUser(req: Request, res: Response) {
 }
 
 async function saveUser(data: any, adminId: number | null) {
-    try{
-        console.log(adminId, data);
-        // check if user has already been created by the same admin
-        const existingUser = await userRepository.createQueryBuilder('users').andWhere('users.adminId = :adminId AND users.email = :email', {adminId, email: data.email}).getOne();
-        if(existingUser) {
-            console.log('user has already been created');
+    try {
+        console.log('admin id', adminId, data);
+
+        // Check if a user with the same email exists, but with a different adminId
+        const existingUser = await userRepository.createQueryBuilder('users')
+            .where('users.email = :email', { email: data.email })
+            .andWhere('users.adminId = :adminId', { adminId })
+            .getOne();
+
+        if (existingUser) {
+            console.log('User with the same email and a different adminId already exists');
             return;
         }
 
+        // Hash password before saving
         const hashedPassword = await bcrypt.hash(data.password || 'Abcd@1234', 10);
+
+        // Create a new user
         const user = new User();
         user.name = data.name;
         user.email = data.email;
@@ -119,9 +127,10 @@ async function saveUser(data: any, adminId: number | null) {
         user.role = 'user';
         user.adminId = adminId;
 
+        // Save user to the database
         await userRepository.save(user);
-        console.log('user saved in the databse');
-    }catch(error) {
-        console.log(error);
+        console.log('User saved in the database');
+    } catch (error) {
+        console.log('Error saving user:', error);
     }
 }

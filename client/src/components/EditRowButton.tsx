@@ -86,7 +86,7 @@ export default function EditRowButton({data}: Props) {
   }
   return (
     <React.Fragment>
-      <Button variant="outlined" onClick={handleClickOpen} startIcon={<EditIcon />}>
+      <Button style={{color: 'grey'}} onClick={handleClickOpen} startIcon={<EditIcon />}>
         Edit
       </Button>
       <Dialog

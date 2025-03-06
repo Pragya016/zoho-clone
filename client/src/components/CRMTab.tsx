@@ -86,7 +86,10 @@ export default function CRMTab() {
         <Button onClick={handleUpload} startIcon={<UploadIcon />}>Upload File</Button>
         <input type="file" onChange={handleFileChange} name="employees" id="fileInput" ref={fileInputRef} hidden={true}/>
       </div>
-        {employees.length > 0 && <BasicTable/>}
+        <div>
+          {employees.length > 0 && <h1 id={styles.heading}>Employees Table</h1>}
+          <BasicTable/>
+        </div>
     </div>
   );
 }

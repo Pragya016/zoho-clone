@@ -5,11 +5,12 @@ import TablePopover from "./TablePopover";
 import { addEmployee } from "../store/slices/employee.slice";
 import { useEffect } from "react";
 import { useAdmin } from "../context/Admin";
+import InfoIcon from '@mui/icons-material/Info';
 
 export default function BasicTable() {
     const {admin} = useAdmin();
     const employees = useSelector(state => state.employees);
-    const headings = [...Object.keys(employees[0])];
+    const headings = employees.length > 0 && [...Object.keys(employees[0])];
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -27,14 +28,20 @@ export default function BasicTable() {
 
         
     if (!employees || employees.length === 0) {
-        return <p>No employees found.</p>;
+        return (
+        <div className={styles.container}>
+            <InfoIcon sx={{fontSize: '4rem'}}/>
+            <h1>No data found to display the table</h1>
+            <p id={styles.text}>Click on the 'Upload button' to start</p>
+        </div>
+        )
     }
 
     return (
         <table id={styles.table}>
             <thead>
                 <tr className={styles.row}>
-                    <th className={styles.theading}>Options</th>
+                    <th className={styles.theading}></th>
                     {headings.map((heading, index) => (
                         <th className={styles.theading} key={index}>{heading}</th>
                     ))}

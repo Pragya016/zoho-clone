@@ -2,9 +2,10 @@ import * as React from 'react';
 import Popover from '@mui/material/Popover';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteRowButton from './DeleteRowButton';
-import EditRowButton, { FormDataInterface } from './EditRowButton';
+import EditRowButton from './EditRowButton';
 import { Employee } from './CRMTab';
 import { useDispatch } from 'react-redux';
+import styles from './css/table.popover.module.css';
 
 interface PopoverProps {
   data: Employee;
@@ -38,9 +39,10 @@ export default function TablePopover({data}: PopoverProps) {
           horizontal: 'left',
         }}
       >
-        {/* <Button onClick={handleEdit}>Edit</Button> */}
+        <div id={styles.box}>
         <EditRowButton data={data}/>
         <DeleteRowButton data={data}/>
+        </div>
       </Popover>
     </div>
   );
