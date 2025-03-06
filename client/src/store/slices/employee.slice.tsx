@@ -14,7 +14,7 @@ const employeesSlice = createSlice({
       const filteredData = state.filter(data => data.email !== action.payload.email);
       return filteredData;
     },
-    updateEmployees: (state, action) => {
+    editEmployees: (state, action) => {
       const updatedState = state.map(emp => {
         if(emp.email === action.payload.email){
           return action.payload;
@@ -24,9 +24,12 @@ const employeesSlice = createSlice({
       })
 
       return updatedState;
+    },
+    filterEmployees: (state, action) => {
+      return action.payload;
     }
   }
 });
 
-export const {getEmployees, addEmployee, deleteEmployee, updateEmployees} = employeesSlice.actions;
+export const {getEmployees, addEmployee, deleteEmployee, filterEmployees, editEmployees} = employeesSlice.actions;
 export default employeesSlice.reducer;

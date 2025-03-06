@@ -11,14 +11,12 @@ config();
 const userRepository = AppDataSource.getRepository(User);
 
 export async function verifyToken(req: Request, res: Response) {
-  // const idToken = req.headers.authorization?.split("Bearer ")[1];
   const { idToken } = req.query;
   if (!idToken) {
     return res.status(401).send({ message: "You are not authorized to view this page" });
   }
 
   try {
-    // const decodedToken = await admin.auth().verifyIdToken(idToken);
     // @ts-ignore
     const decodedToken = await jwt.verify(idToken, process.env.SECRET_KEY);
     const response = {

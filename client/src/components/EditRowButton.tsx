@@ -10,7 +10,7 @@ import { Employee } from './CRMTab';
 import { Alert } from '@mui/material';
 import { fetchData } from '../utility';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateEmployees } from '../store/slices/employee.slice';
+import { editEmployees } from '../store/slices/employee.slice';
 
 interface Props {
   data: Employee;
@@ -78,7 +78,7 @@ export default function EditRowButton({data}: Props) {
   async function updateUserDetails() {
     try {
         const res = await fetchData(`/api/admin/${data.id}`, 'PATCH', formData);
-        dispatch(updateEmployees(res.data.response));
+        dispatch(editEmployees(res.data.response));
         setOpen(false);
     } catch (error) {
         console.error(error);

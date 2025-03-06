@@ -1,4 +1,4 @@
-import { BaseSyntheticEvent, useEffect, useRef, useState } from "react";
+import { BaseSyntheticEvent, FormEvent, useEffect, useRef, useState } from "react";
 import styles from "./css/crm.module.css";
 import {
     Button,
@@ -11,7 +11,7 @@ import { fetchData } from "../utility";
 import BasicTable from "./BasicTable";
 import { useAdmin } from "../context/Admin";
 import { useDispatch, useSelector } from "react-redux";
-import { addEmployee } from "../store/slices/employee.slice";
+import { addEmployee, filterEmployees } from "../store/slices/employee.slice";
 
 export default function CRMTab() {
   const [search, setSearch] = useState<string>("");
@@ -19,6 +19,7 @@ export default function CRMTab() {
   const {admin} = useAdmin();
   const employees = useSelector(state => state.employees);
   const dispatch = useDispatch();
+  console.log(employees);
 
   useEffect(() => {
     fetchEmployees();
@@ -59,7 +60,26 @@ export default function CRMTab() {
         }
       });
       
-      dispatch(addEmployee(res.data));
+      dispatch(addEmployee(res.data.data));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  function handleSearch(e: FormEvent) {
+    e.preventDefault();
+    searchData();
+  }
+
+  async function searchData() {
+    try {
+      const res = await fetchData(`/api/admin/filter?adminId=${admin.id}&q=${search.toLowerCase().trim()}`);
+
+      if(res.status === 200) {
+        dispatch(filterEmployees(res.data));
+      }
+
+      setSearch('');
     } catch (error) {
       console.error(error);
     }
@@ -68,7 +88,7 @@ export default function CRMTab() {
   return (
     <div id={styles.content}>
       <div id={styles.topContainer}>
-        <form id={styles.form}>
+        <form id={styles.form} onSubmit={handleSearch}>
         <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
           <OutlinedInput
             id="outlined-adornment-weight"

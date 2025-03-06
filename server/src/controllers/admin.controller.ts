@@ -39,6 +39,40 @@ export async function handleFileUpload(req: Request, res: Response) {
     }
 }
 
+async function saveUser(data: any, adminId: number | null) {
+    try {
+        console.log('admin id', adminId, data);
+
+        // Check if a user with the same email exists, but with a different adminId
+        const existingUser = await userRepository.createQueryBuilder('users')
+            .where('users.email = :email', { email: data.email })
+            .andWhere('users.adminId = :adminId', { adminId })
+            .getOne();
+
+        if (existingUser) {
+            console.log('User with the same email and a different adminId already exists');
+            return;
+        }
+
+        // Hash password before saving
+        const hashedPassword = await bcrypt.hash(data.password || 'Abcd@1234', 10);
+
+        // Create a new user
+        const user = new User();
+        user.name = data.name;
+        user.email = data.email;
+        user.password = hashedPassword;
+        user.role = 'user';
+        user.adminId = adminId;
+
+        // Save user to the database
+        await userRepository.save(user);
+        console.log('User saved in the database');
+    } catch (error) {
+        console.log('Error saving user:', error);
+    }
+}
+
 export async function handleDeleteUser(req: Request, res: Response) {
     try {
         const {userId} = req.params;
@@ -101,36 +135,30 @@ export async function handleUpdateUser(req: Request, res: Response) {
     }
 }
 
-async function saveUser(data: any, adminId: number | null) {
+export async function handleGetFilteredUsers(req: Request, res:  Response) {
     try {
-        console.log('admin id', adminId, data);
+        const {q, adminId} = req.query;
 
-        // Check if a user with the same email exists, but with a different adminId
-        const existingUser = await userRepository.createQueryBuilder('users')
-            .where('users.email = :email', { email: data.email })
-            .andWhere('users.adminId = :adminId', { adminId })
-            .getOne();
-
-        if (existingUser) {
-            console.log('User with the same email and a different adminId already exists');
-            return;
+        if(!adminId) {
+            return res.status(400).send({message: 'Admin Id is required'});
         }
 
-        // Hash password before saving
-        const hashedPassword = await bcrypt.hash(data.password || 'Abcd@1234', 10);
+        const users = await userRepository.createQueryBuilder('users').where('users.adminId = :adminId', {adminId}).getMany();
 
-        // Create a new user
-        const user = new User();
-        user.name = data.name;
-        user.email = data.email;
-        user.password = hashedPassword;
-        user.role = 'user';
-        user.adminId = adminId;
+        if(!q) {
+            return res.status(200).send({data: users});
+        }
 
-        // Save user to the database
-        await userRepository.save(user);
-        console.log('User saved in the database');
+        const filteredData = users.filter(user => {
+            if (q && typeof q === 'string') {
+                return user.name.toLowerCase().includes(q) || user.email.toLowerCase().includes(q);
+            }
+            return false;
+        });
+
+        res.status(200).send({data: filteredData});
     } catch (error) {
-        console.log('Error saving user:', error);
+        console.log(error);
+        res.status(500).send({message: 'Internal server error'});
     }
 }
