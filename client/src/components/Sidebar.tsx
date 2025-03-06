@@ -57,7 +57,7 @@ export default function SidebarMenu() {
         <div id={styles.userContainer}>
           <img src={userImage} alt="user-image" id={styles.userProfile} />
           {/* {!isCollapsed && ( */}
-            <div style={{ opacity: isCollapsed ? "0" : "1" , transition: '0.3s'}}>
+            <div style={{ opacity: isCollapsed ? "0" : "1" }} id={styles.userDetails}>
               <h1 id={styles.username}>{admin?.name || "Admin"}</h1>
               <p id={styles.userEmail}>
                 <b>{admin?.email || "admin@example.com"}</b>

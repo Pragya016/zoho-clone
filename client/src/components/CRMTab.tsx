@@ -12,14 +12,17 @@ import BasicTable from "./BasicTable";
 import { useAdmin } from "../context/Admin";
 import { useDispatch, useSelector } from "react-redux";
 import { addEmployee, filterEmployees } from "../store/slices/employee.slice";
+// import UsersGrid from "./UsersGrid";
+import EmployeesTablePaginationDemo from "./EmployeesTablePagination";
+import { useEmployees } from "../context/Employees";
 
 export default function CRMTab() {
   const [search, setSearch] = useState<string>("");
   const fileInputRef = useRef(null);
   const {admin} = useAdmin();
-  const employees = useSelector(state => state.employees);
+  // const employees = useSelector(state => state.employees);
+  const {employees} = useEmployees();
   const dispatch = useDispatch();
-  console.log(employees);
 
   useEffect(() => {
     fetchEmployees();
@@ -73,8 +76,9 @@ export default function CRMTab() {
 
   async function searchData() {
     try {
-      const res = await fetchData(`/api/admin/filter?adminId=${admin.id}&q=${search.toLowerCase().trim()}`);
-
+      const res = await fetchData(`/api/admin/filter?adminId=${admin.id}&q=${search.toLowerCase().trim()}`, 'GET');
+      console.log(res);
+      
       if(res.status === 200) {
         dispatch(filterEmployees(res.data));
       }
@@ -109,6 +113,8 @@ export default function CRMTab() {
         <div>
           {employees.length > 0 && <h1 id={styles.heading}>Employees Table</h1>}
           <BasicTable/>
+          <EmployeesTablePaginationDemo />
+          {/* <UsersGrid /> */}
         </div>
     </div>
   );

@@ -37,6 +37,13 @@
     margin: 3rem auto;
 }
 
+#userDetails {
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 #username {
     margin-bottom: 0;
 }

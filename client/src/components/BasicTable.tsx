@@ -6,21 +6,24 @@ import { addEmployee } from "../store/slices/employee.slice";
 import { useEffect } from "react";
 import { useAdmin } from "../context/Admin";
 import InfoIcon from '@mui/icons-material/Info';
+import { useEmployees } from "../context/Employees";
 
 export default function BasicTable() {
     const {admin} = useAdmin();
-    const employees = useSelector(state => state.employees);
+    const {employees} = useEmployees();
     const headings = employees.length > 0 && [...Object.keys(employees[0])];
     const dispatch = useDispatch();
 
     useEffect(() => {
         getUsers();
-    }, [])
+    }, [admin])
 
     async function getUsers() {
         try {
-            const response = await fetchData(`/api/admin?adminId=${admin.id}`, 'GET');
-            dispatch(addEmployee(response.data));
+            if(admin){
+                const response = await fetchData(`/api/admin?adminId=${admin?.id}`, 'GET');
+                dispatch(addEmployee(response.data));
+            }
         } catch (error) {
             console.error(error);
         }
@@ -41,21 +44,21 @@ export default function BasicTable() {
         <table id={styles.table}>
             <thead>
                 <tr className={styles.row}>
-                    <th className={styles.theading}></th>
-                    {headings.map((heading, index) => (
+                    {headings.map((heading: string, index: number) => (
                         <th className={styles.theading} key={index}>{heading}</th>
                     ))}
+                    <th className={styles.theading}>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                {employees.map((emp, rowIndex) => (
+                {employees.map((emp: object, rowIndex: number) => (
                     <tr key={rowIndex} className={styles.row}>
+                        {headings.map((heading: string, colIndex: number) => (
+                            <td className={styles.cols} key={colIndex}>{emp[heading]}</td>
+                        ))}
                         <td className={styles.cols}>
                             <TablePopover data={emp}/>
                         </td>
-                        {headings.map((heading, colIndex) => (
-                            <td className={styles.cols} key={colIndex}>{emp[heading]}</td>
-                        ))}
                     </tr>
                 ))}
             </tbody>

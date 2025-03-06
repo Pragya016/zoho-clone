@@ -10,7 +10,6 @@ export async function handleFileUpload(req: Request, res: Response) {
     try {
         const file = req.file;
         const {id} = req.query;
-        console.log(id)
 
         if (!file) {
             return res.status(400).send({ message: "No file uploaded" });
@@ -95,6 +94,7 @@ export async function handleDeleteUser(req: Request, res: Response) {
 export async function handleGetUsers(req: Request, res: Response) {
     try {
         const {adminId} = req.query;
+        console.log('adminId: ',adminId);
         if(adminId){
             const users = await userRepository.findBy({adminId: +adminId });
             const filteredUsers = users.map(user => {
@@ -106,6 +106,8 @@ export async function handleGetUsers(req: Request, res: Response) {
 
                 return filteredUser;
             })
+
+            console.log(filteredUsers);
             res.status(200).send(filteredUsers);
         }
     } catch (error) {
