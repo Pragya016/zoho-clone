@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
 import { fetchData } from "../utility";
-import { Employees } from "./CRMTab";
 import styles from './css/employees.table.module.css';
 import TablePopover from "./TablePopover";
 import { addEmployee } from "../store/slices/employee.slice";
@@ -12,6 +11,7 @@ export default function BasicTable() {
     const employees = useSelector(state => state.employees);
     const headings = [...Object.keys(employees[0])];
     const dispatch = useDispatch();
+    console.log(employees);
 
     useEffect(() => {
         getUsers();
@@ -42,7 +42,7 @@ export default function BasicTable() {
                 </tr>
             </thead>
             <tbody>
-                {employees[0].map((emp, rowIndex) => (
+                {employees.map((emp, rowIndex) => (
                     <tr key={rowIndex} className={styles.row}>
                         <td className={styles.cols}>
                             <TablePopover data={emp}/>

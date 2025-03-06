@@ -11,6 +11,7 @@ export async function handleFileUpload(req: Request, res: Response) {
     try {
         const file = req.file;
         const {id} = req.query;
+        console.log(id)
 
         if (!file) {
             return res.status(400).send({ message: "No file uploaded" });
@@ -21,13 +22,11 @@ export async function handleFileUpload(req: Request, res: Response) {
         fs.createReadStream(file.path)
             .pipe(csv())
             .on("data", (data) => {
-                console.log('parsing data');
                 saveUser(data, id ? +id : null);
                 results.push(data);
             })
             .on("end", async () => {
                 try {
-                    console.log(results);
                     res.status(201).send(results);
                 } catch (dbError) {
                     res.status(500).send({ message: "Error saving data" });
@@ -104,10 +103,11 @@ export async function handleUpdateUser(req: Request, res: Response) {
 
 async function saveUser(data: any, adminId: number | null) {
     try{
+        console.log(adminId, data);
         // check if user has already been created by the same admin
-        const existingUser = await userRepository.createQueryBuilder('users').andWhere('users.adminId = :adminId OR users.email = :email', {adminId, email: data.email}).getOne();
+        const existingUser = await userRepository.createQueryBuilder('users').andWhere('users.adminId = :adminId AND users.email = :email', {adminId, email: data.email}).getOne();
         if(existingUser) {
-            console.log('user has already been created', existingUser);
+            console.log('user has already been created');
             return;
         }
 

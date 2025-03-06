@@ -13,16 +13,6 @@ import { useAdmin } from "../context/Admin";
 import { useDispatch, useSelector } from "react-redux";
 import { addEmployee } from "../store/slices/employee.slice";
 
-export interface Employees {
-  employees: Employee[];
-  setEmployees: (employee: Employee[]) => void;
-}
-
-export interface Employee {
-  [key: string]: string | number;
-}
-
-
 export default function CRMTab() {
   const [search, setSearch] = useState<string>("");
   const fileInputRef = useRef(null);
@@ -38,7 +28,7 @@ export default function CRMTab() {
     try {
       if(admin){
         const res = await fetchData(`/api/admin?adminId=${admin.id}`, 'GET');
-        // setEmployees(res.data);
+        console.log(res);
         dispatch(addEmployee(res.data));
       }
     } catch (error) {
@@ -64,13 +54,13 @@ export default function CRMTab() {
     try {
       const formData = new FormData();
       formData.append('employees-data', file);
+      console.log(formData, admin);
       const res = await fetchData(`/api/admin/upload?id=${admin?.id}`, 'POST', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
       
-      // setEmployees(res.data);
       dispatch(addEmployee(res.data));
     } catch (error) {
       console.error(error);
@@ -97,7 +87,6 @@ export default function CRMTab() {
         </form>
         <Button onClick={handleUpload} startIcon={<UploadIcon />}>Upload File</Button>
         <input type="file" onChange={handleFileChange} name="employees" id="fileInput" ref={fileInputRef} hidden={true}/>
-        {/* <SimpleTable employees={employees}/> */}
       </div>
         {employees.length > 0 && <BasicTable/>}
     </div>

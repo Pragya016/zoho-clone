@@ -8,12 +8,11 @@ const employeesSlice = createSlice({
       return state;
     },
     addEmployee: (state, action) => {
-      const updatedState = [...state, action.payload]
-      return updatedState;
+      console.log(action.payload);
+      return action.payload;
     },
     deleteEmployee: (state, action) => {
       const filteredData = state.filter(data => data.email !== action.payload.email);
-      console.log(filteredData);
       return filteredData;
     }
   }
