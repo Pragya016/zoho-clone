@@ -304,14 +304,21 @@ export async function handleGetFilteredUsers(req: Request, res: Response) {
 // ------------ handle get data to display chart ---------------
 export async function handleGetChartData(req: Request, res: Response) {
   try {
-    const departments = await userRepository
+    const {type} = req.query;
+
+    if(!type) {
+      return res.status(400).send({message: 'A type field of coloumn name is required in query'});
+    }
+
+    const data = await userRepository
       .createQueryBuilder('users')
-      .select('users.department')
+      .select(`users.${type}`)
       .addSelect('COUNT(users.id)', 'userCount') 
-      .groupBy('users.department')
+      .groupBy(`users.${type}`)
       .getRawMany();
 
-    res.status(200).send(departments);
+    console.log(data)
+    res.status(200).send(data);
   } catch (error) {
     console.log(error);
     res.status(500).send('Internal server error');

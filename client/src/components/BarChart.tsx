@@ -18,7 +18,7 @@ interface ResponseData {
   
   async function getChartData() {
     try {
-        const response = await fetchData('/api/admin/chart-data', 'GET');
+        const response = await fetchData('/api/admin/chart-data?type=department', 'GET');
   
         if(response.status === 200) {
             const xAxisData = response.data.map((data: ResponseData) => {

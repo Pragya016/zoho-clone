@@ -53,7 +53,13 @@ export default function Home() {
       <Suspense fallback={<Loader />}>
         {active.crm && <CRMTab />}
         {active.tasks && <TasksTab />}
-        {active.pieChart && <PieChart />}
+        {active.pieChart && 
+        <div>
+          <PieChart chartType='department'/>
+          <PieChart chartType='designation'/>
+          <PieChart chartType='date_of_joining'/>
+        </div>
+        }
         {active.lineChart && <LineChart />}
         {active.barChart && <BarChart />}
       </Suspense>
