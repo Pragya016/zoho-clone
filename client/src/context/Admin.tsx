@@ -14,7 +14,6 @@ export interface Admin {
 
 interface AdminInterface {
     admin: Admin | null;
-    // setUser: React.Dispatch<React.SetStateAction<User | null>>;
     setAdmin: (admin: Admin) => void;
 }
 

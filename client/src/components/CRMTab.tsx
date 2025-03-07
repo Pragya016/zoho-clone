@@ -1,21 +1,18 @@
-import { BaseSyntheticEvent, FormEvent, useEffect, useRef, useState } from "react";
+import { BaseSyntheticEvent, useEffect, useRef } from "react";
 import styles from "./css/crm.module.css";
 import {
     Button,
-    FormControl,
-    OutlinedInput,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import UploadIcon from '@mui/icons-material/Upload';
 import { fetchData } from "../utility";
 import BasicTable from "./BasicTable";
 import { useAdmin } from "../context/Admin";
 import { useDispatch, useSelector } from "react-redux";
-import { addEmployee, filterEmployees } from "../store/slices/employee.slice";
+import { addEmployee } from "../store/slices/employee.slice";
 import EmployeesTablePaginationDemo from "./EmployeesTablePagination";
+import TableFilterForm from "./TableFilterForm";
 
 export default function CRMTab() {
-  const [search, setSearch] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const { admin } = useAdmin();
   const allEmployees = useSelector((state: any) => state.employees);
@@ -25,7 +22,7 @@ export default function CRMTab() {
     if (admin) {
       fetchEmployees();
     }
-  }, [admin]); // Ensure admin is available before fetching employees
+  }, [admin]);
 
   async function fetchEmployees() {
     try {
@@ -34,10 +31,6 @@ export default function CRMTab() {
     } catch (error) {
       console.error("Error fetching employees:", error);
     }
-  }
-
-  function handleChange(e: BaseSyntheticEvent) {
-    setSearch(e.target.value);
   }
 
   function handleUpload() {
@@ -68,7 +61,6 @@ export default function CRMTab() {
         dispatch(addEmployee(res.data.data));
       }
 
-      // Reset file input after successful upload
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
@@ -77,53 +69,10 @@ export default function CRMTab() {
     }
   }
 
-  function handleSearch(e: FormEvent) {
-    e.preventDefault();
-    searchData();
-  }
-
-  async function searchData() {
-    try {
-      if (!admin || !admin.id) {
-        console.error("Admin is undefined while searching");
-        return;
-      }
-
-      const res = await fetchData(
-        `/api/admin/filter?adminId=${admin.id}&q=${search.toLowerCase().trim()}`,
-        "GET"
-      );
-
-      if (res.status === 200) {
-        dispatch(filterEmployees(res.data.data));
-      }
-
-      setSearch("");
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   return (
     <div id={styles.content}>
       <div id={styles.topContainer}>
-        <form id={styles.form} onSubmit={handleSearch}>
-          <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
-            <OutlinedInput
-              id="outlined-adornment-weight"
-              value={search}
-              onChange={handleChange}
-              startAdornment={<SearchIcon className={styles.searchIcon} />}
-              aria-describedby="outlined-weight-helper-text"
-              inputProps={{
-                "aria-label": "search",
-              }}
-            />
-          </FormControl>
-          <Button variant="contained" id={styles.searchButton} type="submit">
-            Search
-          </Button>
-        </form>
+        <TableFilterForm />
         <Button onClick={handleUpload} startIcon={<UploadIcon />}>
           Upload File
         </Button>

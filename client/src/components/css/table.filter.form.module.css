@@ -1,0 +1,15 @@
+.searchIcon {
+    color: grey;
+  }
+  
+  #form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+  }
+  
+  #searchButton {
+      padding: 1rem;
+  }
+  

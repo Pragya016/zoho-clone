@@ -32,7 +32,6 @@ export default function DeleteRowButton({ data }: Props) {
 
   async function deleteUser(id: number) {
     try {
-      // display a popup modal
       const { data } = await fetchData(`/api/admin/${id}`, "DELETE");
       dispatch(deleteEmployee(data.response));
     } catch (error) {

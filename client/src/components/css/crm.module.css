@@ -2,26 +2,12 @@
   width: 100%;
 }
 
-.searchIcon {
-  color: grey;
-}
-
 #topContainer {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 90%;
   margin: 2rem auto;
-}
-
-#form {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#searchButton {
-    padding: 1rem;
 }
 
 #heading {
