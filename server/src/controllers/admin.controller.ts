@@ -133,6 +133,8 @@ export async function handleGetUsers(req: Request, res: Response) {
         id: user.id,
         name: user.name,
         email: user.email,
+        designation: user.designation,
+        department: user.department,
       };
 
       return filteredUser;
@@ -156,10 +158,21 @@ export async function handleUpdateUser(req: Request, res: Response) {
     }
 
     user.name = data.name;
-    await userRepository.save(user);
+    user.email = data.email;
+    user.designation = data.designation;
+    user.department = data.department;
+    const updatedUser = await userRepository.save(user);
+    const response = {
+      id: updatedUser.id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      designation: updatedUser.designation,
+      department: updatedUser.department,
+    };
+
     res
       .status(200)
-      .send({ message: "User data updated successfully", response: user });
+      .send({ message: "User data updated successfully", response });
   } catch (error) {
     console.log(error);
     res.status(500).send({ message: "Internal server error" });
@@ -168,29 +181,61 @@ export async function handleUpdateUser(req: Request, res: Response) {
 
 export async function handleGetFilteredUsers(req: Request, res: Response) {
   try {
-    const { q, condition } = req.query;
-
-    // filter the data based on the condition
-    const users = await userRepository
-      .createQueryBuilder("users")
-      .where("users.role = :role", { role: "user" })
-      .getMany();
-
-    if (!q) {
-      return res.status(200).send({ data: users });
+    const { q, type } = req.query;
+    if (!type) {
+      return res.status(400).send({ message: "Please specify the query type" });
     }
 
-    const filteredData = users.filter((user) => {
-      if (q && typeof q === "string") {
-        return (
-          user.name.toLowerCase().includes(q) ||
-          user.email.toLowerCase().includes(q)
+    const queryBuilder = userRepository
+      .createQueryBuilder("users")
+      .where("users.role = :role", { role: "user" });
+
+    if (q && typeof q === "string") {
+      const queryValue = q.toLowerCase();
+
+      if (type === "equals") {
+        queryBuilder.andWhere(
+          "(LOWER(users.name) = :q OR LOWER(users.email) = :q OR LOWER(users.designation) = :q OR LOWER(users.department) = :q)",
+          { q: queryValue }
         );
+      } else if (type === "contains") {
+        queryBuilder.andWhere(
+          "(LOWER(users.name) LIKE :q OR LOWER(users.email) LIKE :q OR LOWER(users.designation) LIKE :q OR LOWER(users.department) LIKE :q)",
+          { q: `%${queryValue}%` }
+        );
+      } else if (type === "less-than") {
+        const idValue = parseInt(q);
+        if (isNaN(idValue)) {
+          return res
+            .status(400)
+            .send({ message: "Invalid value for less-than query" });
+        }
+        queryBuilder.andWhere("users.id < :id", { id: idValue });
+      } else if (type === "greater-than") {
+        const idValue = parseInt(q);
+        if (isNaN(idValue)) {
+          return res
+            .status(400)
+            .send({ message: "Invalid value for greater-than query" });
+        }
+        queryBuilder.andWhere("users.id > :id", { id: idValue });
+      } else {
+        return res.status(400).send({ message: "Invalid query type" });
       }
-      return false;
+    }
+
+    const users = await queryBuilder.getMany();
+    const filteredUsers = users.map((user) => {
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        designation: user.designation,
+        department: user.department,
+      };
     });
 
-    res.status(200).send({ data: filteredData });
+    res.status(200).send({ data: filteredUsers });
   } catch (error) {
     console.log(error);
     res.status(500).send({ message: "Internal server error" });
