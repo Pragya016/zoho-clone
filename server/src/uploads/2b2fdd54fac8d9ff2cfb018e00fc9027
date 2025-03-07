@@ -1,0 +1,11 @@
+name,email,department,designation,date_of_joining,date_of_leaving,date_of_birth,address,phone
+John Doe,johndoe@techcorp.com,Software Development,Senior Developer,2020-03-15,2025-03-15,1985-06-10,"1234 Tech Blvd, Silicon Valley, CA, 94043",+1-555-123-4567
+Jane Smith,janesmith@techcorp.com,Quality Assurance,QA Engineer,2019-07-01,2025-07-01,1990-02-20,"5678 Innovation Road, San Francisco, CA, 94105",+1-555-234-5678
+Alice Johnson,alicej@techcorp.com,Human Resources,HR Manager,2021-05-20,2025-05-20,1988-11-05,"9101 Management Drive, Palo Alto, CA, 94301",+1-555-345-6789
+Bob Williams,bobwilliams@techcorp.com,Product Management,Product Manager,2022-01-15,2025-01-15,1992-04-12,"1234 Product Lane, Mountain View, CA, 94040",+1-555-456-7890
+Emily Davis,emilydavis@techcorp.com,IT Support,IT Support Specialist,2020-11-30,2025-11-30,1995-09-18,"6789 Service Avenue, San Jose, CA, 95112",+1-555-567-8901
+David Miller,davidmiller@techcorp.com,Sales,Sales Executive,2023-04-10,2025-04-10,1994-01-25,"1122 Sales Drive, San Mateo, CA, 94401",+1-555-678-9012
+Sophia Wilson,sophiaw@techcorp.com,Marketing,Marketing Strategist,2021-08-15,2025-08-15,1991-03-22,"3456 Media Street, Redwood City, CA, 94063",+1-555-789-0123
+James Brown,jamesbrown@techcorp.com,Operations,Operations Manager,2018-09-25,2025-09-25,1987-12-05,"4567 Efficiency Blvd, Menlo Park, CA, 94025",+1-555-890-1234
+Olivia Taylor,oliviataylor@techcorp.com,Finance,Finance Analyst,2022-06-05,2025-06-05,1993-08-30,"7890 Capital Road, Sunnyvale, CA, 94086",+1-555-901-2345
+Ethan Harris,ethanharris@techcorp.com,Software Development,Junior Developer,2024-02-25,2025-02-25,1999-07-15,"1357 Code Lane, Cupertino, CA, 95014",+1-555-012-3456

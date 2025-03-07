@@ -6,6 +6,9 @@ export class User {
   id!: number;
 
   @Column()
+  uid!: string;
+
+  @Column()
   name!: string;
 
   @Column({ unique: true })
@@ -13,6 +16,21 @@ export class User {
 
   @Column()
   password!: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  phone!: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  address!: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  date_of_birth!: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  date_of_joining!: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  date_of_leaving!: string | null;
 
   @Column()
   role!: string;

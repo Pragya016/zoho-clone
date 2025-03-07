@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import { config } from "dotenv";
 import bcrypt from "bcrypt";
 import { sendMail } from "../actions/mail.action";
+import { v4 as uuidv4 } from 'uuid';
 config();
 
 // TODO: Uncomment send mail function
@@ -34,6 +35,7 @@ export async function verifyToken(req: Request, res: Response) {
 
 export async function handleSignupUser(req: Request, res: Response) {
   try {
+    console.log(req.body);
     const { name, email, password, role } = req.body;
 
     // Validate user input
@@ -54,6 +56,7 @@ export async function handleSignupUser(req: Request, res: Response) {
 
     // Hash password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
+    const uid = uuidv4();
 
     // Create a new user and save in the database
     const user = new User();
@@ -61,11 +64,10 @@ export async function handleSignupUser(req: Request, res: Response) {
     user.email = email;
     user.password = hashedPassword;
     user.role = role;
-    user.designation = null;
-    user.department = null;
+    user.uid = uid;
 
     await userRepository.save(user);
-    sendMail(email, name);
+    // sendMail(email, name);
     return res.status(201).send({ message: "User registered successfully" });
   } catch (error) {
     console.error(error);

@@ -55,7 +55,7 @@ export default function CRMTab() {
 
       const formData = new FormData();
       formData.append("employees-data", file);
-      const res = await fetchData(`/api/admin/upload?id=${admin.id}`, "POST", formData);
+      const res = await fetchData(`/api/admin/upload?adminId=${admin.id}`, "POST", formData);
 
       if(res.status === 201){
         dispatch(addEmployee(res.data.data));

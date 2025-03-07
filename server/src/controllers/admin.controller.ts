@@ -4,6 +4,9 @@ import csv from "csv-parser";
 import { AppDataSource } from "../database/datasource";
 import { User } from "../entity/User";
 import bcrypt from "bcrypt";
+import { v4 as uuidv4 } from 'uuid';
+import { config } from "dotenv";
+config();
 
 const userRepository = AppDataSource.getRepository(User);
 
@@ -75,6 +78,26 @@ async function saveUser(data: any, adminId: string) {
       return;
     }
 
+    if (!data.address) {
+      console.log("User address is missing, skipping row.");
+      return;
+    }
+
+    if (!data.phone) {
+      console.log("User contact number is missing, skipping row.");
+      return;
+    }
+
+    if (!data.date_of_joining) {
+      console.log("User date of joining is missing, skipping row.");
+      return;
+    }
+
+    if (!data.date_of_birth) {
+      console.log("User date of birth is missing, skipping row.");
+      return;
+    }
+
     // Check if a user with the same email exists
     const existingUser = await userRepository
       .createQueryBuilder("users")
@@ -87,15 +110,22 @@ async function saveUser(data: any, adminId: string) {
     }
 
     // Hash password before saving
-    const hashedPassword = await bcrypt.hash(data.password || "Abcd@1234", 10);
+    const hashedPassword = await bcrypt.hash(data.password || process.env.RANDOM_PASSWORD, 10);
+    const uid = uuidv4();
 
     // Create a new user
     const user = new User();
     user.name = data.name || "Unknown";
     user.email = data.email;
     user.password = hashedPassword;
-    user.department = data.department || null;
-    user.designation = data.designation || null;
+    user.department = data.department;
+    user.designation = data.designation;
+    user.date_of_joining = data.date_of_joining;
+    user.date_of_leaving = data.date_of_leaving || null;
+    user.date_of_birth = data.date_of_birth || null;
+    user.address = data.address;
+    user.phone = data.phone;
+    user.uid = uid;
     user.role = "user";
 
     // Save user to the database
@@ -135,18 +165,25 @@ export async function handleDeleteUser(req: Request, res: Response) {
 export async function handleGetUsers(req: Request, res: Response) {
   try {
     const users = await userRepository.findBy({ role: "user" });
-    const filteredUsers = users.map((user) => {
-      const filteredUser = {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        designation: user.designation,
-        department: user.department,
-      };
 
-      return filteredUser;
-    });
-    res.status(200).send(filteredUsers);
+    if(users.length > 0) {
+      const filteredUsers = users.map((user) => {
+        const filteredUser = {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          designation: user.designation,
+          department: user.department,
+          address: user.address,
+          phone: user.phone,
+        };
+  
+        return filteredUser;
+      });
+      return res.status(200).send(filteredUsers);
+    }
+
+    res.status(204).send({message: 'There are no users in the database'});
   } catch (error) {
     console.log(error);
     res.status(500).send({ message: "Internal server error" });
@@ -165,15 +202,26 @@ export async function handleUpdateUser(req: Request, res: Response) {
       return res.status(404).send({ message: "User not found" });
     }
 
-    user.name = data.name;
-    user.email = data.email;
-    user.designation = data.designation;
-    user.department = data.department;
+    user.name = data.name || user.name;
+    user.email = data.email || user.email;
+    user.password = user.password;
+    user.date_of_birth = user.date_of_birth;
+    user.date_of_joining = user.date_of_joining;
+    user.date_of_leaving = user.date_of_leaving;
+    user.address = data.address || user.address;
+    user.phone = data.phone || user.phone;
+    user.department = data.department || user.department;
+    user.designation = data.designation || user.designation;
+    user.uid = user.uid;
+    user.role = user.role;
+
     const updatedUser = await userRepository.save(user);
     const response = {
       id: updatedUser.id,
       name: updatedUser.name,
       email: updatedUser.email,
+      address: updatedUser.address,
+      phone: updatedUser.phone,
       designation: updatedUser.designation,
       department: updatedUser.department,
     };
@@ -199,48 +247,50 @@ export async function handleGetFilteredUsers(req: Request, res: Response) {
       .createQueryBuilder("users")
       .where("users.role = :role", { role: "user" });
 
-    if (q && typeof q === "string") {
-      const queryValue = q.toLowerCase();
-
-      if (type === "equals") {
-        queryBuilder.andWhere(
-          "(LOWER(users.name) = :q OR LOWER(users.email) = :q OR LOWER(users.designation) = :q OR LOWER(users.department) = :q)",
-          { q: queryValue }
-        );
-      } else if (type === "contains") {
-        queryBuilder.andWhere(
-          "(LOWER(users.name) LIKE :q OR LOWER(users.email) LIKE :q OR LOWER(users.designation) LIKE :q OR LOWER(users.department) LIKE :q)",
-          { q: `%${queryValue}%` }
-        );
-      } else if (type === "less-than") {
-        const idValue = parseInt(q);
-        if (isNaN(idValue)) {
-          return res
-            .status(400)
-            .send({ message: "Invalid value for less-than query" });
+      if (q && typeof q === "string") {
+        const queryValue = q.toLowerCase();
+      
+        if (type === "equals") {
+          queryBuilder.andWhere(
+            "(LOWER(users.name) = :q OR LOWER(users.email) = :q OR LOWER(users.designation) = :q OR LOWER(users.department) = :q OR LOWER(users.phone) = :q OR LOWER(users.address) = :q)",
+            { q: queryValue }
+          );
+        } else if (type === "contains") {
+          queryBuilder.andWhere(
+            "(LOWER(users.name) LIKE :q OR LOWER(users.email) LIKE :q OR LOWER(users.designation) LIKE :q OR LOWER(users.department) LIKE :q OR LOWER(users.phone) LIKE :q OR LOWER(users.address) LIKE :q)",
+            { q: `%${queryValue}%` }
+          );
+        } else if (type === "less-than") {
+          const idValue = parseInt(q);
+          if (isNaN(idValue)) {
+            return res
+              .status(400)
+              .send({ message: "Invalid value for less-than query" });
+          }
+          queryBuilder.andWhere("users.id < :id", { id: idValue });
+        } else if (type === "greater-than") {
+          const idValue = parseInt(q);
+          if (isNaN(idValue)) {
+            return res
+              .status(400)
+              .send({ message: "Invalid value for greater-than query" });
+          }
+          queryBuilder.andWhere("users.id > :id", { id: idValue });
+        } else {
+          return res.status(400).send({ message: "Invalid query type" });
         }
-        queryBuilder.andWhere("users.id < :id", { id: idValue });
-      } else if (type === "greater-than") {
-        const idValue = parseInt(q);
-        if (isNaN(idValue)) {
-          return res
-            .status(400)
-            .send({ message: "Invalid value for greater-than query" });
-        }
-        queryBuilder.andWhere("users.id > :id", { id: idValue });
-      } else {
-        return res.status(400).send({ message: "Invalid query type" });
       }
-    }
-
-    const users = await queryBuilder.getMany();
-    const filteredUsers = users.map((user) => {
+  
+      const users = await queryBuilder.getMany();
+      const filteredUsers = users.map((user) => {
       return {
         id: user.id,
         name: user.name,
         email: user.email,
-        designation: user.designation,
+        address: user.address,
+        phone: user.phone,
         department: user.department,
+        designation: user.designation,
       };
     });
 
