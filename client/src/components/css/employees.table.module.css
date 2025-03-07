@@ -1,33 +1,39 @@
 #table {
-    width: 80%;
-    margin: 2rem auto auto auto;
+  width: 80%;
+  margin: 2rem auto auto auto;
 }
 
 .row {
-    border: 1px solid lightgrey;
+  border: 1px solid lightgrey;
 }
 
 .theading {
-    background-color: var(--cols-color);
-    color: white;
-    padding: 1rem;
-    width: 10px;
+  background-color: var(--cols-color);
+  color: white;
+  padding: 1rem;
+  width: 10px;
 }
 
 .cols {
-    background-color: whitesmoke;
-    padding: 1rem;
+  background-color: whitesmoke;
+  padding: 1rem;
 }
 
 .container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    height: 70svh;
-    color: rgb(164, 164, 164);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 70svh;
+  color: rgb(164, 164, 164);
 }
 
 #text {
-    margin: 0;
+  margin: 0;
+}
+
+#heading {
+  color: grey;
+  text-align: center;
+  margin-top: 4rem;
 }

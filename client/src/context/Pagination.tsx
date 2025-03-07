@@ -1,8 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
-
-interface ProviderInterface {
-    children: React.ReactNode;
-}
+import { createContext, ReactNode, useContext, useState } from "react";
 
 export interface Employee {
     [key: string]: string;
@@ -20,7 +16,7 @@ const defaultEmployees: Employees = {
 
 const EmployeesContext = createContext<Employees>(defaultEmployees);
 
-export function EmployeesProvider({ children }: ProviderInterface) {
+export function PaginationProvider({ children }: { children: ReactNode }) {
     const [employees, setEmployees] = useState<Employee[]>([]);
 
     return (
@@ -30,7 +26,7 @@ export function EmployeesProvider({ children }: ProviderInterface) {
     );
 }
 
-export function useEmployees() {
+export function usePagination() {
     const context = useContext(EmployeesContext);
     return context;
 }

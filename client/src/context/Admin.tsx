@@ -1,8 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
-
-interface ProviderInterface {
-    children: React.ReactNode;
-}
+import { createContext, ReactNode, useContext, useState } from "react";
 
 export interface Admin {
     id: number;
@@ -24,7 +20,7 @@ const dummyUser: AdminInterface = {
 
 const UserContext = createContext<AdminInterface>(dummyUser);
 
-export function AdminProvider({ children }: ProviderInterface) {
+export function AdminProvider({ children }: { children: ReactNode }) {
     const [admin, setAdmin] = useState<Admin | null>(null);
 
     return (

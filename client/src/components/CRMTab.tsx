@@ -86,7 +86,6 @@ export default function CRMTab() {
         />
       </div>
       <div>
-        {allEmployees.length > 0 && <h1 id={styles.heading}>Employees Table</h1>}
         <BasicTable />
         {allEmployees.length > 0 && <EmployeesTablePaginationDemo />}
       </div>

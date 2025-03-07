@@ -1,17 +1,18 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { fetchData } from "../utility";
 import styles from './css/employees.table.module.css';
 import TablePopover from "./TablePopover";
 import { addEmployee } from "../store/slices/employee.slice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAdmin } from "../context/Admin";
 import InfoIcon from '@mui/icons-material/Info';
-import { useEmployees } from "../context/Employees";
+import { usePagination } from "../context/Pagination";
 
 export default function BasicTable() {
     const {admin} = useAdmin();
-    const {employees} = useEmployees();
+    const {employees} = usePagination();
     const headings = employees.length > 0 && [...Object.keys(employees[0])];
+    const [loading, setLoading] = useState<boolean>(true);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -27,10 +28,18 @@ export default function BasicTable() {
         } catch (error) {
             console.error(error);
         }
+        finally {
+            setLoading(false);
+        }
     }
 
+    if(loading) {
+        return (
+            <h1>Loading table...</h1>
+        )
+    }
         
-    if (!employees || employees.length === 0) {
+    if (employees.length === 0) {
         return (
         <div className={styles.container}>
             <InfoIcon sx={{fontSize: '4rem'}}/>
@@ -41,6 +50,8 @@ export default function BasicTable() {
     }
 
     return (
+        <>
+        <h1 id={styles.heading}>Employees Table</h1>
         <table id={styles.table}>
             <thead>
                 <tr className={styles.row}>
@@ -63,5 +74,6 @@ export default function BasicTable() {
                 ))}
             </tbody>
         </table>
+        </>
     );
 }

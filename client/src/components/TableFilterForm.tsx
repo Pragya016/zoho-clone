@@ -32,8 +32,6 @@ export default function TableFilterForm() {
     setFormData({...formData, search: value});
   }
 
-  console.log(formData);
-
   function handleSelect(e: SelectChangeEvent) {
     const value = e.target.value;
     setFormData({...formData, type: value});

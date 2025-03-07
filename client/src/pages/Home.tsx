@@ -1,11 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { fetchData } from "../utility";
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import SidebarMenu from "../components/Sidebar";
 import { Box } from "@mui/material";
 import { ResponseInterface } from "../components/SignInCard";
 import { Admin, useAdmin } from "../context/Admin";
 import CRMTab from "../components/CRMTab";
+import { useActiveMenu } from "../context/ActiveMenu";
+import TasksTab from "../components/TasksTab";
+import Loader from "../components/Loader";
 
 interface AdminInterface {
   data: Admin;
@@ -14,6 +17,10 @@ interface AdminInterface {
 export default function Home() {
     const navigate = useNavigate();
     const {setAdmin} = useAdmin();
+    const { active } = useActiveMenu();
+    const PieChart = lazy(() => import("../components/PieChart"))
+    const BarChart = lazy(() => import("../components/BarChart"))
+    const LineChart = lazy(() => import("../components/LineChart"))
 
     useEffect(() => {
       const token = localStorage.getItem('idToken');
@@ -43,7 +50,13 @@ export default function Home() {
     return (
       <Box sx={{display: 'flex'}}>
       <SidebarMenu />
-      <CRMTab />
+      <Suspense fallback={<Loader />}>
+        {active.crm && <CRMTab />}
+        {active.tasks && <TasksTab />}
+        {active.pieChart && <PieChart />}
+        {active.lineChart && <LineChart />}
+        {active.barChart && <BarChart />}
+      </Suspense>
       </Box>
     )
 }

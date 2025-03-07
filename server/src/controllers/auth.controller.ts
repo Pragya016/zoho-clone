@@ -65,7 +65,7 @@ export async function handleSignupUser(req: Request, res: Response) {
     user.department = null;
 
     await userRepository.save(user);
-    // sendMail(email, name);
+    sendMail(email, name);
     return res.status(201).send({ message: "User registered successfully" });
   } catch (error) {
     console.error(error);

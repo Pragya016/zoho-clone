@@ -6,6 +6,8 @@ import { User } from "../entity/User";
 import bcrypt from "bcrypt";
 
 const userRepository = AppDataSource.getRepository(User);
+
+// ------------ handle file upload ---------------
 export async function handleFileUpload(req: Request, res: Response) {
   try {
     const file = req.file;
@@ -47,6 +49,8 @@ export async function handleFileUpload(req: Request, res: Response) {
   }
 }
 
+
+// ------------ Save uploaded file's data in the database ---------------
 async function saveUser(data: any, adminId: string) {
   try {
     const adminIdNumber = parseInt(adminId, 10);
@@ -102,6 +106,7 @@ async function saveUser(data: any, adminId: string) {
   }
 }
 
+// ------------ handle delete one user ---------------
 export async function handleDeleteUser(req: Request, res: Response) {
   try {
     const { userId } = req.params;
@@ -125,6 +130,8 @@ export async function handleDeleteUser(req: Request, res: Response) {
   }
 }
 
+
+// ------------ handle fetch all users ---------------
 export async function handleGetUsers(req: Request, res: Response) {
   try {
     const users = await userRepository.findBy({ role: "user" });
@@ -146,6 +153,7 @@ export async function handleGetUsers(req: Request, res: Response) {
   }
 }
 
+// ------------ handle update user details ---------------
 export async function handleUpdateUser(req: Request, res: Response) {
   try {
     const { userId } = req.params;
@@ -179,6 +187,7 @@ export async function handleUpdateUser(req: Request, res: Response) {
   }
 }
 
+// ------------ handle filter users based on the condition ---------------
 export async function handleGetFilteredUsers(req: Request, res: Response) {
   try {
     const { q, type } = req.query;
@@ -239,5 +248,22 @@ export async function handleGetFilteredUsers(req: Request, res: Response) {
   } catch (error) {
     console.log(error);
     res.status(500).send({ message: "Internal server error" });
+  }
+}
+
+// ------------ handle get data to display chart ---------------
+export async function handleGetChartData(req: Request, res: Response) {
+  try {
+    const departments = await userRepository
+      .createQueryBuilder('users')
+      .select('users.department')
+      .addSelect('COUNT(users.id)', 'userCount') 
+      .groupBy('users.department')
+      .getRawMany();
+
+    res.status(200).send(departments);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal server error');
   }
 }
