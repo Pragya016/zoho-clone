@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useAdmin } from "../context/Admin";
 import InfoIcon from '@mui/icons-material/Info';
 import { usePagination } from "../context/Pagination";
+import Loader from "./Loader";
 
 export default function BasicTable() {
     const {admin} = useAdmin();
@@ -35,7 +36,7 @@ export default function BasicTable() {
 
     if(loading) {
         return (
-            <h1>Loading table...</h1>
+            <Loader />
         )
     }
         

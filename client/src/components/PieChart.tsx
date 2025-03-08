@@ -3,23 +3,23 @@ import { PieChart } from '@mui/x-charts/PieChart';
 import { fetchData } from '../utility';
 import styles from './css/chart.module.css';
 
-interface ChartData {
+export interface ChartData {
     value: number;
     label: string;
 }
 
-interface ResponseData {
+export interface ResponseData {
     userCount: string;
     users_department?: string;
     users_designation?: string;
     users_date_of_joining: string;
 }
 
-interface Props {
+export interface ChartProps {
   chartType: string;
 }
 
-export default function PieChartTab({chartType}: Props) {
+export default function PieChartTab({chartType}: ChartProps) {
   const [chartData, setChartData] = React.useState<ChartData[]>([]);
 
   React.useEffect(() => {
@@ -58,12 +58,12 @@ export default function PieChartTab({chartType}: Props) {
     } catch (error) {
         console.error(error);
     }
-}
+  }
 
 
   return (
     <div id={styles.chartContainer}>
-      <h1>Pie Chart based on {chartType}</h1>
+      <h1 id={styles.chartHeading}>Pie Chart based on {chartType}</h1>
         <PieChart
           series={[
             {
@@ -72,8 +72,8 @@ export default function PieChartTab({chartType}: Props) {
       faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
             },
           ]}
-          width={700}
-          height={350}
+          width={1000}
+          height={600}
         />
         </div>
   );

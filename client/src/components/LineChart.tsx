@@ -3,11 +3,6 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import { fetchData } from '../utility';
 import styles from './css/chart.module.css';
 
-interface ResponseData {
-  userCount: string;
-  users_department: string;
-}
-
 export default function LineChartTab() {
 const [xAxis, setXAxis] = React.useState([]);
 const [yAxis, setYAxis] = React.useState([]);
@@ -16,31 +11,48 @@ React.useEffect(() => {
   getChartData();
 }, []);
 
-async function getChartData() {
+  async function getChartData() {
   try {
-      const response = await fetchData('/api/admin/chart-data?type=department', 'GET');
-
+      const response = await fetchData(`/api/admin/chart-data?type=${chartType}`, 'GET');
       if(response.status === 200) {
-          const xAxisData = response.data.map((data: ResponseData) => +data.userCount);
-          const yAxisData = response.data.map((data: ResponseData) => data.users_department);
-          console.log(xAxisData, yAxisData);
-          setXAxis(xAxisData);
-          setYAxis(yAxisData);
+          const updatedChartData = response.data.map((data: ResponseData, index: number) => {
+              let label: string = '';
+
+              if (chartType === 'department' && data.users_department) {
+                  label = data.users_department;
+              }
+
+              if (chartType === 'designation' && data.users_designation) {
+                  label = data.users_designation;
+              }
+
+              if (chartType === 'date_of_joining' && data.users_date_of_joining) {
+                  label = data.users_date_of_joining;
+              }
+
+              return label ? {
+                  id: index,
+                  value: +data.userCount,
+                  label: label
+              } : null;
+          }).filter((item: ResponseData) => item !== null);
+
+          setChartData(updatedChartData);
       }
 
   } catch (error) {
       console.error(error);
   }
-}
+  }
   return (
     <div id={styles.chartContainer}>
       <h1 id={styles.chartHeading}>Line Chart of the employees based on Departments</h1>
       <div id={styles.chart}>
     <LineChart
-      xAxis={[{ data: xAxis }]}
+      xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
       series={[
         {
-          data: xAxis,
+          data: [2, 5.5, 2, 8.5, 1.5, 5],
         },
       ]}
       width={1000}

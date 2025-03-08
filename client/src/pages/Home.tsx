@@ -20,7 +20,6 @@ export default function Home() {
     const { active } = useActiveMenu();
     const PieChart = lazy(() => import("../components/PieChart"))
     const BarChart = lazy(() => import("../components/BarChart"))
-    const LineChart = lazy(() => import("../components/LineChart"))
 
     useEffect(() => {
       const token = localStorage.getItem('idToken');
@@ -53,15 +52,8 @@ export default function Home() {
       <Suspense fallback={<Loader />}>
         {active.crm && <CRMTab />}
         {active.tasks && <TasksTab />}
-        {active.pieChart && 
-        <div>
-          <PieChart chartType='department'/>
-          <PieChart chartType='designation'/>
-          <PieChart chartType='date_of_joining'/>
-        </div>
-        }
-        {active.lineChart && <LineChart />}
-        {active.barChart && <BarChart />}
+        {active.pieChart && <PieChart chartType='department'/>}
+        {active.barChart && <BarChart chartType='department'/>}
       </Suspense>
       </Box>
     )
