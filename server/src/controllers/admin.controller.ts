@@ -34,7 +34,7 @@ export async function handleFileUpload(req: Request, res: Response) {
           await saveUser(data, adminId);
           results.push(data);
         } catch (error) {
-          console.error(error);
+          console.log(error);
         }
       })
       .on("end", () => {
@@ -43,11 +43,11 @@ export async function handleFileUpload(req: Request, res: Response) {
           .json({ message: "File processed successfully", users: results });
       })
       .on("error", (err) => {
-        console.error(err);
+        console.log(err);
         res.status(500).json({ message: "Error processing file" });
       });
   } catch (e) {
-    console.error(e);
+    console.log(e);
     res.status(500).json({ message: "Internal Server Error" });
   }
 }
@@ -132,7 +132,7 @@ async function saveUser(data: any, adminId: string) {
     await userRepository.save(user);
     console.log(`User ${user.email} saved in the database`);
   } catch (error) {
-    console.error("Error saving user:", error);
+    console.log(error);
   }
 }
 

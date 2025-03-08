@@ -25,12 +25,12 @@ export async function sendMail(receiver_mail: string, name: string) {
 
         transporter.sendMail(mailOptions, (err, info) => {
             if (err) {
-                console.error("Error sending email:", err);
+                console.log("Error sending email:", err);
             }
             
             console.log("Email sent successfully:", info.response);
         });
     } catch (error) {
-      console.error('Error sending email:', error);
+      console.log('Error sending email:', error);
     }
   }

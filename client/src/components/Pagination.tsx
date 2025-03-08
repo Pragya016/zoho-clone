@@ -5,16 +5,7 @@ import { usePagination } from '../context/Pagination';
 
 export default function EmployeesTablePaginationDemo() {
   const allEmployees = useSelector((state) => state.employees);
-  const { employees, setEmployees } = usePagination();
-  const [page, setPage] = React.useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState<number>(10);
-
-  React.useEffect(() => {
-    const startIndex = page * rowsPerPage;
-    const endIndex = startIndex + rowsPerPage;
-    const paginatedEmployees = allEmployees.slice(startIndex, endIndex);
-    setEmployees(paginatedEmployees);
-  }, [page, rowsPerPage, allEmployees, setEmployees]);
+  const { employees, page, setPage, rowsPerPage, setRowsPerPage } = usePagination();
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,

@@ -8,6 +8,6 @@ export const getEmployees = createAsyncThunk('employees/getEmployees', async ( _
 
         return [];
     } catch (error) {
-        console.error(error);
+        console.log(error);
     }
 } )

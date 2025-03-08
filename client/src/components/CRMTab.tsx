@@ -1,22 +1,19 @@
-import { BaseSyntheticEvent, useEffect, useRef } from "react";
-import styles from "./css/crm.module.css";
-import {
-    Button,
-} from "@mui/material";
-import UploadIcon from '@mui/icons-material/Upload';
+import { useEffect, useState } from "react";
 import { fetchData } from "../utility";
-import BasicTable from "./BasicTable";
+import BasicTable from "./Table";
 import { useAdmin } from "../context/Admin";
 import { useDispatch, useSelector } from "react-redux";
 import { addEmployee } from "../store/slices/employee.slice";
-import EmployeesTablePaginationDemo from "./EmployeesTablePagination";
-import TableFilterForm from "./TableFilterForm";
+import Loader from "./Loader";
+import { usePagination } from "../context/Pagination";
+import { Box } from "@mui/material";
 
 export default function CRMTab() {
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const { admin } = useAdmin();
-  const allEmployees = useSelector((state: any) => state.employees);
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState<boolean>(true);
+  const { page, rowsPerPage, setEmployees } = usePagination();
+  const allEmployees = useSelector((state) => state.employees);
 
   useEffect(() => {
     if (admin) {
@@ -24,71 +21,31 @@ export default function CRMTab() {
     }
   }, [admin]);
 
+  useEffect(() => {
+    const startIndex = page * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    const paginatedEmployees = allEmployees.slice(startIndex, endIndex);
+    setEmployees(paginatedEmployees);
+  }, [page, rowsPerPage, setEmployees, allEmployees]);
+
   async function fetchEmployees() {
     try {
       const res = await fetchData(`/api/admin`, "GET");
       dispatch(addEmployee(res.data));
     } catch (error) {
-      console.error("Error fetching employees:", error);
-    }
-  }
-
-  function handleUpload() {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  }
-
-  function handleFileChange(e: BaseSyntheticEvent) {
-    const file = e.target.files[0];
-    if (file) {
-      uploadData(file);
-    }
-  }
-
-  async function uploadData(file: File) {
-    try {
-      if (!admin || !admin.id) {
-        console.error("Admin is undefined or missing ID");
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append("employees-data", file);
-      const res = await fetchData(`/api/admin/upload?adminId=${admin.id}`, "POST", formData);
-
-      if(res.status === 201){
-        dispatch(addEmployee(res.data.data));
-      }
-
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-    } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
+  }
+
+  if (loading) {
+    return <Loader />;
   }
 
   return (
-    <div id={styles.content}>
-      <div id={styles.topContainer}>
-        <TableFilterForm />
-        <Button onClick={handleUpload} startIcon={<UploadIcon />}>
-          Upload File
-        </Button>
-        <input
-          type="file"
-          onChange={handleFileChange}
-          name="employees"
-          id="fileInput"
-          ref={fileInputRef}
-          hidden
-        />
-      </div>
-      <div>
-        <BasicTable />
-        {allEmployees.length > 0 && <EmployeesTablePaginationDemo />}
-      </div>
-    </div>
+    <Box sx={{ height: "100svh", overflow: "scroll", width: "100%" }}>
+      <BasicTable />;
+    </Box>
   );
 }

@@ -4,6 +4,7 @@ import cors from 'cors';
 import { AppDataSource } from "./database/datasource";
 import authRouter from './routers/auth.router';
 import adminRouter from './routers/admin.router';
+import tasksRouter from './routers/tasks.router';
 import bodyParser from "body-parser";
 
 const server = express();
@@ -28,13 +29,14 @@ AppDataSource.initialize()
         console.log("Data Source has been initialized!");
     })
     .catch((err: Error) => {
-        console.error("Error during Data Source initialization", err);
+        console.log("Error during Data Source initialization", err);
     });
 
 
 // API routes
 server.use('/api/auth', authRouter);
 server.use('/api/admin', adminRouter);
+server.use('/api/tasks', tasksRouter);
 
 const PORT = 3001;
 server.listen(PORT, () => {

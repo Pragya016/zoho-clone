@@ -70,7 +70,7 @@ export async function handleSignupUser(req: Request, res: Response) {
     // sendMail(email, name);
     return res.status(201).send({ message: "User registered successfully" });
   } catch (error) {
-    console.error(error);
+    console.log(error);
     return res.status(500).send({ message: "Internal server error" });
   }
 }

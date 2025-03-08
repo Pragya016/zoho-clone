@@ -1,5 +1,18 @@
+#content {
+  width: 90%;
+  margin: auto;
+}
+
+#topContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 2rem auto;
+  width: 100%;
+}
+
 #table {
-  width: 80%;
+  width: 100%;
   margin: 2rem auto auto auto;
 }
 
