@@ -31,12 +31,12 @@ export async function handleCreateTask(req: Request, res: Response) {
     const task = await new Task();
     task.description = data.description;
     task.created_by = data.created_by;
-    task.assigned_by = data.assigned_by || task.assigned_by;
-    task.assigned_to = data.assigned_to || task.assigned_to;
-    task.status = data.status || task.status;
+    task.assigned_by = data.assigned_by || 'Unknown';
+    task.assigned_to = data.assigned_to || 'Not assigned yet';
+    task.status = data.status || 'Not started';
 
     const response = await tasksRepository.save(task);
-    res.status(200).send(response);
+    res.status(201).send(response);
   } catch (error) {
     console.log(error);
     res.status(500).send({ message: "Internal server error" });

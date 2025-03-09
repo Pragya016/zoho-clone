@@ -16,8 +16,8 @@ export interface ActiveInterface {
 
 const dummyActiveMenu: ActiveMenuContextInterface = {
   active: {
-    crm: true,
-    tasks: false,
+    crm: false,
+    tasks: true,
     pieChart: false,
     lineChart: false,
     barChart: false,

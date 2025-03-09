@@ -7,9 +7,8 @@ import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck";
 import PeopleIcon from "@mui/icons-material/People";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import PieChartIcon from "@mui/icons-material/PieChart";
-import ShowChartIcon from "@mui/icons-material/ShowChart";
 import logo from "../assets/zoho-logo.png";
-import { BaseSyntheticEvent, useState } from "react";
+import { BaseSyntheticEvent, useEffect, useState } from "react";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import userImage from "../assets/default-user-icon.jpg";
@@ -74,6 +73,8 @@ export default function SidebarMenu() {
             <p id={styles.text}>Logged in as {admin?.role}</p>
           </div>
         </div>
+        {admin && admin.role === 'admin' && 
+        <>
         <MenuItem
           icon={<PeopleIcon />}
           className='menu-item'
@@ -89,6 +90,8 @@ export default function SidebarMenu() {
           {/* <MenuItem icon={<ShowChartIcon />} className='menu-item' onClick={handleClick}>Line Chart</MenuItem> */}
           <MenuItem icon={<BarChartIcon />} className='menu-item' onClick={handleClick}>Bar Chart</MenuItem>
         </SubMenu>
+        </>
+        }
         <MenuItem
           onClick={handleClick}
           icon={<PlaylistAddCheckIcon />}

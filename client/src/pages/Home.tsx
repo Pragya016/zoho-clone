@@ -7,7 +7,7 @@ import { ResponseInterface } from "../components/SignInCard";
 import { Admin, useAdmin } from "../context/Admin";
 import CRMTab from "../components/CRMTab";
 import { useActiveMenu } from "../context/ActiveMenu";
-import TasksTab from "../components/TasksTab";
+// import TasksTab from "../components/TasksTab";
 import Loader from "../components/Loader";
 
 interface AdminInterface {
@@ -16,10 +16,11 @@ interface AdminInterface {
 
 export default function Home() {
     const navigate = useNavigate();
-    const {setAdmin} = useAdmin();
+    const {admin,setAdmin} = useAdmin();
     const { active } = useActiveMenu();
-    const PieChart = lazy(() => import("../components/PieChart"))
-    const BarChart = lazy(() => import("../components/BarChart"))
+    const PieChart = lazy(() => import("../components/PieChart"));
+    const BarChart = lazy(() => import("../components/BarChart"));
+    const TasksTab = lazy(() => import("../components/TasksTab"));
 
     useEffect(() => {
       const token = localStorage.getItem('idToken');
@@ -28,6 +29,10 @@ export default function Home() {
         checkIsAuthorised(token);
       }
   
+    }, [])
+
+    useEffect(() => {
+      
     }, [])
   
     async function checkIsAuthorised(token : string) {
@@ -50,10 +55,10 @@ export default function Home() {
       <Box sx={{display: 'flex'}}>
       <SidebarMenu />
       <Suspense fallback={<Loader />}>
-        {active.crm && <CRMTab />}
+        {admin && admin.role === 'admin' && active.crm && <CRMTab />}
         {active.tasks && <TasksTab />}
-        {active.pieChart && <PieChart chartType='department'/>}
-        {active.barChart && <BarChart chartType='department'/>}
+        {admin && admin.role === 'admin' && active.pieChart && <PieChart chartType='department'/>}
+        {admin && admin.role === 'admin' && active.barChart && <BarChart chartType='department'/>}
       </Suspense>
       </Box>
     )
