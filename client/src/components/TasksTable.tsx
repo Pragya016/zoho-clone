@@ -5,6 +5,7 @@ import { fetchData } from "../utility";
 import { updateTasks } from "../store/slices/task.slice";
 import DeleteTaskButton from "./DeleteTaskButton";
 import EditTaskButton from "./EditTaskButton";
+import styles from './css/table.module.css';
 
 export default function TasksTable() {
   const [selectedStatus, setSelectedStatus] = useState<{ [key: string]: string }>({});
@@ -41,20 +42,21 @@ export default function TasksTable() {
   }
 
   return (
-    <table>
+    <div id={styles.content}>
+    <table id={styles.table}>
       <thead>
-        <tr>
+        <tr className={styles.row}>
           {headings.map((heading, index) => (
-            <th key={index}>{heading}</th>
+            <th className={styles.theading} key={index}>{heading}</th>
           ))}
-          <th>Actions</th>
+          <th className={styles.theading}>Actions</th>
         </tr>
       </thead>
       <tbody>
         {tasks.map((task) => (
-          <tr key={task.id}>
+          <tr className={styles.row} key={task.id}>
             {headings.map((heading) => (
-              <td key={heading}>
+              <td key={heading} className={styles.cols}>
                 {heading === 'status' ? (
                   <FormControl sx={{ m: 1, minWidth: 120 }}>
                     <InputLabel id={`status-label-${task.id}`}>Status</InputLabel>
@@ -76,7 +78,7 @@ export default function TasksTable() {
                 )}
               </td>
             ))}
-            <td>
+            <td className={styles.cols}>
               <EditTaskButton data={task}/>
               <DeleteTaskButton taskId={task.id}/>
             </td>
@@ -84,6 +86,7 @@ export default function TasksTable() {
         ))}
       </tbody>
     </table>
+    </div>
   );
 }
 

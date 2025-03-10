@@ -47,8 +47,8 @@ import Navbar from './Navbar';
     <BarChart
       xAxis={[{ scaleType: 'band', data: yAxis }]}
       series={[{ data: xAxis}]}
-      width={600}
-      height={700}
+      width={1350}
+      height={800}
     />
     </div>
   );
