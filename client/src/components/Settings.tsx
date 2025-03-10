@@ -1,12 +1,16 @@
-import * as React from 'react';
-import Popover from '@mui/material/Popover';
-import SettingsIcon from '@mui/icons-material/Settings';
-import { IconButton } from '@mui/material';
-import KeyIcon from '@mui/icons-material/Key';
-import { Link } from 'react-router-dom';
+import * as React from "react";
+import Popover from "@mui/material/Popover";
+import SettingsIcon from "@mui/icons-material/Settings";
+import { IconButton } from "@mui/material";
+import KeyIcon from "@mui/icons-material/Key";
+import { useNavigate } from "react-router-dom";
+import styles from "./css/settings.module.css";
 
 export default function Settings() {
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
+    null
+  );
+  const navigate = useNavigate();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -17,7 +21,7 @@ export default function Settings() {
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const id = open ? "simple-popover" : undefined;
 
   return (
     <div>
@@ -30,11 +34,17 @@ export default function Settings() {
         anchorEl={anchorEl}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
+          vertical: "bottom",
+          horizontal: "left",
         }}
       >
-      <Link to='/change-password'>change-password</Link>
+        <div
+          className={styles.menu_item}
+          onClick={() => navigate("/change-password")}
+        >
+          <KeyIcon className={styles.key_icon} />
+          <span>Change Password</span>
+        </div>
       </Popover>
     </div>
   );

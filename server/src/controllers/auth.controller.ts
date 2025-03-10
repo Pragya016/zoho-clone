@@ -8,7 +8,6 @@ import { sendMail } from "../actions/mail.action";
 import { v4 as uuidv4 } from 'uuid';
 config();
 
-// TODO: Uncomment send mail function
 const userRepository = AppDataSource.getRepository(User);
 
 export async function verifyToken(req: Request, res: Response) {

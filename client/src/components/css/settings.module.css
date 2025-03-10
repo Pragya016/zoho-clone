@@ -1,0 +1,10 @@
+.menu_item {
+  display: flex;
+  align-items: center;
+  color: grey;
+  padding: 1rem;
+}
+
+.key_icon {
+  margin-right: 5px;
+}
