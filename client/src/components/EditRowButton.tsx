@@ -52,6 +52,10 @@ export default function EditRowButton({data}: Props) {
       ...formData,
       [name]: value
     })
+
+    if(error) {
+      setError('');
+    }
   }
 
   function handleSaveChanges() {

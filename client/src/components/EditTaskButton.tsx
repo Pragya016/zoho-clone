@@ -50,6 +50,10 @@ export default function EditTaskButton({data}: Props) {
       ...formData,
       [name]: value
     })
+
+    if(error) {
+      setError('');
+    }
   }
 
   function handleSaveChanges() {
