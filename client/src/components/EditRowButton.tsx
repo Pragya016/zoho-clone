@@ -19,11 +19,15 @@ interface Props {
 export interface FormDataInterface {
   name: string;
   email: string;
+  phone: string;
+  address: string;
 }
 
 const initialState = {
   name: '',
   email: '',
+  phone: '',
+  address: '',
 }
 
 export default function EditRowButton({data}: Props) {
@@ -31,10 +35,9 @@ export default function EditRowButton({data}: Props) {
   const [formData, setFormData] = React.useState<FormDataInterface>(initialState);
   const [error, setError] = React.useState<string>('');
   const dispatch = useDispatch();
-  const employees = useSelector(state => state.employees);
 
   React.useEffect(() => {
-    setFormData({email: data.email, name: data.name});
+    setFormData({email: data.email, name: data.name, phone: data.phone, address: data.address});
   }, [data]);
   
   const handleClickOpen = () => {
@@ -60,18 +63,33 @@ export default function EditRowButton({data}: Props) {
 
   function handleSaveChanges() {
     if(!formData.name) {
-      setError('Name field can\'t be empty');
+      setError('Please fill this field - Name');
       return;
     }
 
     if(!formData.email) {
-      setError('Email field can\'t be empty');
+      setError('Please fill this field - Email');
       return;
     }
 
     const emailRegExp = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/;
     if (!emailRegExp.test(formData.email)) {
       setError('Email is not valid');
+      return;
+    }
+
+    if(!formData.phone) {
+      setError('Please fill this field - Contact No.');
+      return;
+    }
+
+    if(formData.phone.trim().length < 10) {
+      setError('Contact No. must include 10 digits');
+      return;
+    }
+
+    if(!formData.address) {
+      setError('Please fill this field - Address');
       return;
     }
 
@@ -88,6 +106,7 @@ export default function EditRowButton({data}: Props) {
         console.error(error);
     }
   }
+  console.log(formData);
   return (
     <React.Fragment>
       <IconButton onClick={handleClickOpen}>
@@ -126,6 +145,34 @@ export default function EditRowButton({data}: Props) {
             fullWidth
             variant="standard"
             value={formData.email}
+            onChange={handleChange}
+          />
+          <TextField
+            autoFocus
+            onFocus={() => setError('')}
+            required
+            margin="dense"
+            id="phone"
+            name="phone"
+            label="Contact No."
+            type="text"
+            fullWidth
+            variant="standard"
+            value={formData.phone}
+            onChange={handleChange}
+          />
+                    <TextField
+            autoFocus
+            onFocus={() => setError('')}
+            required
+            margin="dense"
+            id="address"
+            name="address"
+            label="Address"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={formData.address}
             onChange={handleChange}
           />
         </DialogContent>

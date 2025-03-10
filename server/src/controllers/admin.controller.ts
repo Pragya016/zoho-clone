@@ -324,7 +324,6 @@ export async function handleGetChartData(req: Request, res: Response) {
       .groupBy(`users.${type}`)
       .getRawMany();
 
-    console.log(data)
     res.status(200).send(data);
   } catch (error) {
     console.log(error);

@@ -82,15 +82,15 @@ export default function ChangePasswordCard() {
         {error && <Alert severity="error">{error}</Alert>}
         <FormControl>
           <FormLabel htmlFor="old-password" className={styles.label}>Old Password*</FormLabel>
-          <TextField id="old-password" variant="outlined" name="oldPassword" onChange={handleChange}/>
+          <TextField type="password" id="old-password" variant="outlined" name="oldPassword" onChange={handleChange}/>
         </FormControl>
         <FormControl>
           <FormLabel htmlFor="new-password" className={styles.label}>New Password*</FormLabel>
-          <TextField id="new-password" variant="outlined" name="newPassword" onChange={handleChange}/>
+          <TextField type="password" id="new-password" variant="outlined" name="newPassword" onChange={handleChange}/>
         </FormControl>
         <FormControl>
           <FormLabel htmlFor="new-password-repeated"className={styles.label}>New Password (Enter Again)*</FormLabel>
-          <TextField id="new-password-repeated" variant="outlined" name="newPasswordRepeated" onChange={handleChange}/>
+          <TextField type="password" id="new-password-repeated" variant="outlined" name="newPasswordRepeated" onChange={handleChange}/>
         </FormControl>
           <Button type="submit" variant="contained" id={styles.submitButton}>Change Password</Button>
       </form>

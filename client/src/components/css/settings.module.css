@@ -3,8 +3,11 @@
   align-items: center;
   color: grey;
   padding: 1rem;
+  cursor: pointer;
 }
 
 .key_icon {
-  margin-right: 5px;
+  margin-right: 0.5rem;
+  border-right: 1px solid lightgrey;
+  padding-right: 0.5rem;
 }
