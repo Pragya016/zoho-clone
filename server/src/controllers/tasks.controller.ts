@@ -46,24 +46,24 @@ export async function handleCreateTask(req: Request, res: Response) {
 export async function handleDeleteTask(req: Request, res: Response) {
   try {
     const { taskId } = req.params;
-    console.log(taskId);
 
-    if(!taskId) {
-        return res.status(400).send({message: "taskId is required"});
+    if (!taskId) {
+      return res.status(400).send({ message: "taskId is required" });
     }
 
-    if(isNaN(+taskId)) {
-        return res.status(400).send({message: "taskId is invalid"});
+    if (isNaN(+taskId)) {
+      return res.status(400).send({ message: "taskId is invalid" });
     }
 
-    const taskToDelete = await tasksRepository.findOneBy({id: parseInt(taskId)});
+    const task = await tasksRepository.findOneBy({ id: parseInt(taskId) });
+    const taskToDelete = {...task};
 
-    if(!taskToDelete) {
-        return res.status(404).send({message: "There is no task to delete"});
+    if (!taskToDelete) {
+      return res.status(404).send({ message: "There is no task to delete" });
     }
 
     await tasksRepository.remove(taskToDelete);
-    res.status(200).send(taskToDelete);
+    res.status(200).send(task);
   } catch (error) {
     console.log(error);
     res.status(500).send({ message: "Internal server error" });

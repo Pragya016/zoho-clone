@@ -6,35 +6,33 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import EditIcon from '@mui/icons-material/Edit';
-import { Employee } from './CRMTab';
 import { Alert, IconButton } from '@mui/material';
 import { fetchData } from '../utility';
-import { useDispatch, useSelector } from 'react-redux';
-import { editEmployees } from '../store/slices/employee.slice';
+import { useDispatch } from 'react-redux';
+import { updateTasks } from '../store/slices/task.slice';
 
 interface Props {
-  data: Employee;
+  data: FormDataInterface;
 }
 
 export interface FormDataInterface {
-  name: string;
-  email: string;
+  [key: string]: string | number
 }
 
 const initialState = {
-  name: '',
-  email: '',
+  description: '',
+  assignedBy: '',
+  assignedTo: '',
 }
 
-export default function EditRowButton({data}: Props) {
+export default function EditTaskButton({data}: Props) {
   const [open, setOpen] = React.useState(false);
   const [formData, setFormData] = React.useState<FormDataInterface>(initialState);
   const [error, setError] = React.useState<string>('');
   const dispatch = useDispatch();
-  const employees = useSelector(state => state.employees);
 
   React.useEffect(() => {
-    setFormData({email: data.email, name: data.name});
+    setFormData({description: data.description, assignedBy: data.assigned_by, assignedTo: data.assigned_to});
   }, [data]);
   
   const handleClickOpen = () => {
@@ -55,30 +53,29 @@ export default function EditRowButton({data}: Props) {
   }
 
   function handleSaveChanges() {
-    if(!formData.name) {
-      setError('Name field can\'t be empty');
+    if(!formData.description) {
+      setError("Please fill this field 'Description'");
       return;
     }
 
-    if(!formData.email) {
-      setError('Email field can\'t be empty');
+    if(!formData.assignedBy) {
+      setError("Please fill this field 'Assign By'");
       return;
     }
 
-    const emailRegExp = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/;
-    if (!emailRegExp.test(formData.email)) {
-      setError('Email is not valid');
+    if(!formData.assignedBy) {
+      setError("Please fill this field 'Assign To'");
       return;
     }
 
-    updateUserDetails();
+    updateTaskDetails();
     setFormData(initialState);
   }
 
-  async function updateUserDetails() {
+  async function updateTaskDetails() {
     try {
-        const res = await fetchData(`/api/admin/${data.id}`, 'PATCH', formData);
-        dispatch(editEmployees(res.data.response));
+        const res = await fetchData(`/api/tasks/${data.id}`, 'PATCH', formData);
+        dispatch(updateTasks(res.data));
         setOpen(false);
     } catch (error) {
         console.error(error);
@@ -86,14 +83,14 @@ export default function EditRowButton({data}: Props) {
   }
   return (
     <React.Fragment>
-      <IconButton onClick={handleClickOpen}>
-        <EditIcon color='primary'/>
+      <IconButton style={{color: 'grey'}} onClick={handleClickOpen} color='primary'>
+        <EditIcon />
       </IconButton>
       <Dialog
         open={open}
         onClose={handleClose}
       >
-        <DialogTitle>Edit Row Data</DialogTitle>
+        <DialogTitle>Edit Task</DialogTitle>
         <DialogContent>
           {error && <Alert severity='error'>{error}</Alert>}
             <TextField
@@ -101,27 +98,41 @@ export default function EditRowButton({data}: Props) {
             onFocus={() => setError('')}
             required
             margin="dense"
-            id="name"
-            name="name"
-            label="Name"
+            id="description"
+            name="description"
+            label="Description"
             type="text"
             fullWidth
             variant="standard"
-            value={formData.name}
+            value={formData.description}
             onChange={handleChange}
           />
-          <TextField
+            <TextField
             autoFocus
             onFocus={() => setError('')}
             required
             margin="dense"
-            id="email"
-            name="email"
-            label="Email"
+            id="assign_by"
+            name="assignedBy"
+            label="Assign By"
             type="text"
             fullWidth
             variant="standard"
-            value={formData.email}
+            value={formData.assignedBy}
+            onChange={handleChange}
+          />
+            <TextField
+            autoFocus
+            onFocus={() => setError('')}
+            required
+            margin="dense"
+            id="assign_to"
+            name="assignedTo"
+            label="Assign To"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={formData.assignedTo}
             onChange={handleChange}
           />
         </DialogContent>

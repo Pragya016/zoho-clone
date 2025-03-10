@@ -11,6 +11,8 @@ import TableFilterForm from "./TableFilterForm";
 import { Button } from "@mui/material";
 import UploadIcon from "@mui/icons-material/Upload";
 import EmployeesTablePaginationDemo from "./Pagination";
+import EditRowButton from "./EditRowButton";
+import DeleteRowButton from "./DeleteRowButton";
 
 export default function BasicTable() {
   const { admin } = useAdmin();
@@ -75,7 +77,7 @@ export default function BasicTable() {
         <TableFilterForm />
         <Button
           variant="outlined"
-          sx={{ fontWeight: 600 }}
+          sx={{ fontWeight: 600, padding: '0.8rem', fontSize: '1rem' }}
           onClick={handleUpload}
           startIcon={<UploadIcon />}
         >
@@ -90,6 +92,7 @@ export default function BasicTable() {
           hidden
         />
       </div>
+      <div id={styles.tableContainer}>
       <table id={styles.table}>
         <thead>
           <tr className={styles.row}>
@@ -110,12 +113,15 @@ export default function BasicTable() {
                 </td>
               ))}
               <td className={styles.cols}>
-                <TablePopover data={emp} />
+                {/* <TablePopover data={emp} /> */}
+                <EditRowButton data={emp}/>
+                <DeleteRowButton data={emp}/>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+      </div>
       <EmployeesTablePaginationDemo />
     </div>
   );

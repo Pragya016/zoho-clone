@@ -20,7 +20,6 @@ export async function handleFileUpload(req: Request, res: Response) {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
-    console.log(adminId, typeof adminId);
     if (!adminId || typeof adminId !== "string") {
       return res.status(400).json({ message: "Admin ID is required" });
     }

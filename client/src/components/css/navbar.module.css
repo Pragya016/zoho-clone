@@ -1,0 +1,10 @@
+.nav {
+    border-bottom: 1px solid lightgrey;
+    padding: 1rem;
+    width: 100%;
+}
+
+.heading {
+    margin: 0;
+    color: grey;
+}

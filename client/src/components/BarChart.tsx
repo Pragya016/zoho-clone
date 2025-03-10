@@ -3,6 +3,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { fetchData } from '../utility';
 import styles from './css/chart.module.css';
 import { ChartProps, ResponseData } from './PieChart';
+import Navbar from './Navbar';
   
   export default function BarCharTab({chartType}: ChartProps) {
   const [xAxis, setXAxis] = React.useState([]);
@@ -42,7 +43,7 @@ import { ChartProps, ResponseData } from './PieChart';
 
   return (
     <div id={styles.chartContainer}>
-        <h1 id={styles.chartHeading}>Bar chart of the employees based on {chartType}</h1>
+    <Navbar heading={`Pie Chart of the employees based on ${chartType}`}/>
     <BarChart
       xAxis={[{ scaleType: 'band', data: yAxis }]}
       series={[{ data: xAxis}]}

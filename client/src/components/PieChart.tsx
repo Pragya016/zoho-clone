@@ -2,6 +2,7 @@ import * as React from 'react';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { fetchData } from '../utility';
 import styles from './css/chart.module.css';
+import Navbar from './Navbar';
 
 export interface ChartData {
     value: number;
@@ -63,7 +64,7 @@ export default function PieChartTab({chartType}: ChartProps) {
 
   return (
     <div id={styles.chartContainer}>
-      <h1 id={styles.chartHeading}>Pie Chart based on {chartType}</h1>
+      <Navbar heading={`Pie Chart of the employees based on ${chartType}`}/>
         <PieChart
           series={[
             {

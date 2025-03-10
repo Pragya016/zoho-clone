@@ -1,6 +1,8 @@
 #content {
   width: 90%;
   margin: auto;
+  height: 90vh;
+  overflow: scroll;
 }
 
 #topContainer {
@@ -11,9 +13,15 @@
   width: 100%;
 }
 
+#tableContainer {
+  width: 100%;
+  height: 70vh;
+  overflow: scroll;
+  margin: auto;
+}
+
 #table {
   width: 100%;
-  margin: 2rem auto auto auto;
 }
 
 .row {
@@ -30,6 +38,8 @@
 .cols {
   background-color: whitesmoke;
   padding: 1rem;
+  color: grey;
+  font-weight: 500;
 }
 
 .container {

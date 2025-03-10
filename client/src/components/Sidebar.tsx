@@ -8,13 +8,14 @@ import PeopleIcon from "@mui/icons-material/People";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import PieChartIcon from "@mui/icons-material/PieChart";
 import logo from "../assets/zoho-logo.png";
-import { BaseSyntheticEvent, useEffect, useState } from "react";
+import { BaseSyntheticEvent, useState } from "react";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import userImage from "../assets/default-user-icon.jpg";
 import styles from "./css/sidebar.module.css";
 import { useAdmin } from "../context/Admin";
 import { useActiveMenu } from "../context/ActiveMenu";
+import ShowChartIcon from '@mui/icons-material/ShowChart';
 
 export default function SidebarMenu() {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ export default function SidebarMenu() {
 
   return (
     <Sidebar id={styles.sidebar} width="350px" collapsed={isCollapsed}>
-      <Menu>
+      <Menu style={{height: '100%'}}>
         <div id={styles.topContainer}>
           <IconButton
             onClick={() => setIsCollapsed((prevState) => !prevState)}
@@ -87,7 +88,7 @@ export default function SidebarMenu() {
           icon={<BarChartIcon />}
         >
           <MenuItem icon={<PieChartIcon />} className='menu-item' onClick={handleClick}>Pie Chart</MenuItem>
-          {/* <MenuItem icon={<ShowChartIcon />} className='menu-item' onClick={handleClick}>Line Chart</MenuItem> */}
+          <MenuItem icon={<ShowChartIcon />} className='menu-item' onClick={handleClick}>Line Chart</MenuItem>
           <MenuItem icon={<BarChartIcon />} className='menu-item' onClick={handleClick}>Bar Chart</MenuItem>
         </SubMenu>
         </>
@@ -101,7 +102,6 @@ export default function SidebarMenu() {
           Tasks Management
         </MenuItem>
       </Menu>
-
       <div id={styles.logoutButtonContainer}>
         <LogoutModal isCollapsed={isCollapsed} onLogout={handleLogoutUser} />
       </div>

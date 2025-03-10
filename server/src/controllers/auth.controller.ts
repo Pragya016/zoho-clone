@@ -35,7 +35,6 @@ export async function verifyToken(req: Request, res: Response) {
 
 export async function handleSignupUser(req: Request, res: Response) {
   try {
-    console.log(req.body);
     const { name, email, password, role } = req.body;
 
     // Validate user input

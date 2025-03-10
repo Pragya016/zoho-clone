@@ -1,57 +1,85 @@
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchData } from "../utility";
+import { updateTasks } from "../store/slices/task.slice";
+import DeleteTaskButton from "./DeleteTaskButton";
+import EditTaskButton from "./EditTaskButton";
 
 export default function TasksTable() {
-  const [age, setAge] = useState('');
-  const tasks = useSelector((state) => state.tasks);
+  const [selectedStatus, setSelectedStatus] = useState<{ [key: string]: string }>({});
+  const tasks = useSelector((state: any) => state.tasks);
   const headings = tasks.length > 0 ? Object.keys(tasks[0]) : [];
+  const dispatch = useDispatch();
 
   if (tasks.length <= 0) {
     return <h1>Start creating tasks and assign them</h1>;
   }
 
+  function handleChange(event: SelectChangeEvent<string>, taskId: string) {
+    const value = event.target.value;
+    setSelectedStatus({
+      ...selectedStatus,
+      [taskId]: value,
+    });
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value);
+    // Update the status in the database
+    updateStatus(taskId, value);
   };
+
+  async function updateStatus(taskId: string, value: string) {
+    try {
+        const res = await fetchData(`/api/tasks/${taskId}`, 'PATCH', {status: value});
+
+        if(res.status === 200) {
+            dispatch(updateTasks(res.data));
+        }
+
+    } catch (error) {
+        console.error(error);
+    }
+  }
 
   return (
     <table>
       <thead>
         <tr>
-          {headings.map((heading, index: number) => (
+          {headings.map((heading, index) => (
             <th key={index}>{heading}</th>
           ))}
-          <td>Actions</td>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        {tasks.map((task, index: number) => (
-          <tr key={index}>
-            {headings.map((heading: string, colIndex: number) => (
-              <td key={colIndex}>
-                {heading === 'status' &&  <FormControl sx={{ m: 1, minWidth: 120 }}>
-        <InputLabel id="demo-simple-select-helper-label">Age</InputLabel>
-        <Select
-          labelId="demo-simple-select-helper-label"
-          id={task.id}
-          value={age}
-          label="Age"
-          onChange={handleChange}
-        >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
-        </Select>
-      </FormControl>}
-                {heading !== 'status' && task[heading]}
+        {tasks.map((task) => (
+          <tr key={task.id}>
+            {headings.map((heading) => (
+              <td key={heading}>
+                {heading === 'status' ? (
+                  <FormControl sx={{ m: 1, minWidth: 120 }}>
+                    <InputLabel id={`status-label-${task.id}`}>Status</InputLabel>
+                    <Select
+                      labelId={`status-label-${task.id}`}
+                      id={task.id}
+                      value={task[heading] || ''}
+                      label="Status"
+                      onChange={(e) => handleChange(e, task.id)}
+                    >
+                      <MenuItem value='Not started'>Not Started</MenuItem>
+                      <MenuItem value='In Progress'>In Progress</MenuItem>
+                      <MenuItem value='Pending'>Pending</MenuItem>
+                      <MenuItem value='Completed'>Completed</MenuItem>
+                    </Select>
+                  </FormControl>
+                ) : (
+                  task[heading]
+                )}
               </td>
             ))}
-            <td>edit, delete, status</td>
+            <td>
+              <EditTaskButton data={task}/>
+              <DeleteTaskButton taskId={task.id}/>
+            </td>
           </tr>
         ))}
       </tbody>

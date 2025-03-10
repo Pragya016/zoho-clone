@@ -7,7 +7,6 @@ import { ResponseInterface } from "../components/SignInCard";
 import { Admin, useAdmin } from "../context/Admin";
 import CRMTab from "../components/CRMTab";
 import { useActiveMenu } from "../context/ActiveMenu";
-// import TasksTab from "../components/TasksTab";
 import Loader from "../components/Loader";
 
 interface AdminInterface {
@@ -20,6 +19,7 @@ export default function Home() {
     const { active } = useActiveMenu();
     const PieChart = lazy(() => import("../components/PieChart"));
     const BarChart = lazy(() => import("../components/BarChart"));
+    const LineChart = lazy(() => import("../components/LineChart"));
     const TasksTab = lazy(() => import("../components/TasksTab"));
 
     useEffect(() => {
@@ -54,12 +54,15 @@ export default function Home() {
     return (
       <Box sx={{display: 'flex'}}>
       <SidebarMenu />
+      <Box sx={{overflow: 'hidden', width:'100%'}}>
       <Suspense fallback={<Loader />}>
         {admin && admin.role === 'admin' && active.crm && <CRMTab />}
         {active.tasks && <TasksTab />}
         {admin && admin.role === 'admin' && active.pieChart && <PieChart chartType='department'/>}
         {admin && admin.role === 'admin' && active.barChart && <BarChart chartType='department'/>}
+        {admin && admin.role === 'admin' && active.lineChart && <LineChart chartType='department'/>}
       </Suspense>
+      </Box>
       </Box>
     )
 }

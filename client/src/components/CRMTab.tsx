@@ -7,6 +7,7 @@ import { addEmployee } from "../store/slices/employee.slice";
 import Loader from "./Loader";
 import { usePagination } from "../context/Pagination";
 import { Box } from "@mui/material";
+import Navbar from "./Navbar";
 
 export default function CRMTab() {
   const { admin } = useAdmin();
@@ -44,7 +45,8 @@ export default function CRMTab() {
   }
 
   return (
-    <Box sx={{ height: "100svh", overflow: "scroll", width: "100%" }}>
+    <Box>
+      <Navbar heading='Customer Relationship Module'/>
       <BasicTable />;
     </Box>
   );

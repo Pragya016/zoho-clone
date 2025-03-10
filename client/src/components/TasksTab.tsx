@@ -4,6 +4,8 @@ import TasksTable from "./TasksTable";
 import { fetchData } from "../utility";
 import { useDispatch } from "react-redux";
 import { setInitialState } from "../store/slices/task.slice";
+import Navbar from "./Navbar";
+import { Box } from "@mui/material";
 
 export default function TasksTab() {
     const dispatch = useDispatch();
@@ -25,9 +27,10 @@ export default function TasksTab() {
     }
 
     return (
-        <div>
+        <Box sx={{width: '100%'}}>
+            <Navbar heading="Tasks Management"/>
             <TaskForm />
             <TasksTable />
-        </div>
+        </Box>
     )
 }

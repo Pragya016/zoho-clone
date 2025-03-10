@@ -7,18 +7,14 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch } from "react-redux";
 import { fetchData } from "../utility";
-import { deleteEmployee } from "../store/slices/employee.slice";
+import { deleteTask } from "../store/slices/task.slice";
 import { IconButton } from "@mui/material";
 
 interface Props {
-  data: DataInterface;
+  taskId: string
 }
 
-interface DataInterface {
-  [key: string | number]: string;
-}
-
-export default function DeleteRowButton({ data }: Props) {
+export default function DeleteTaskButton({ taskId }: Props) {
   const [open, setOpen] = React.useState(false);
   const dispatch = useDispatch();
 
@@ -31,14 +27,14 @@ export default function DeleteRowButton({ data }: Props) {
   };
 
   const handleDelete = () => {
-    deleteUser(data.id);
+    removeTask(taskId);
     setOpen(false);
   };
 
-  async function deleteUser(id: number) {
+  async function removeTask(id: string) {
     try {
-      const { data } = await fetchData(`/api/admin/${id}`, "DELETE");
-      dispatch(deleteEmployee(data.response));
+      const { data } = await fetchData(`/api/tasks/${id}`, "DELETE");
+      dispatch(deleteTask(data.id));
     } catch (error) {
       console.error(error);
     }
@@ -59,8 +55,7 @@ export default function DeleteRowButton({ data }: Props) {
       >
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete this user? This action can't be
-            undone.
+            Are you sure you want to delete this Task?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

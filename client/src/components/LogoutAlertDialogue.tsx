@@ -51,5 +51,5 @@ export default function LogoutAlertDialog({ onLogout, isCollapsed }: Props) {
         </DialogActions>
       </Dialog>
     </React.Fragment>
-  );
+  )
 }
