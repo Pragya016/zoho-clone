@@ -4,6 +4,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import {
+  Alert,
   Box,
   CircularProgress,
   DialogTitle,
@@ -45,7 +46,6 @@ export default function TaskForm() {
 
   async function saveTask() {
     try {
-      setIsSaving(true);
       const res = await fetchData("/api/tasks", "POST", {
         description: formData.description,
         assigned_to: formData.assignTo,
@@ -53,10 +53,14 @@ export default function TaskForm() {
       });
 
       if (res.status === 201) {
+        setIsSaving(true);
         dispatch(createTask(res.data));
+        setOpen(false);
       }
+
+      setError(res.message);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
     finally {
       setIsSaving(false);
@@ -67,13 +71,13 @@ export default function TaskForm() {
     e.preventDefault();
     // create task by calling the API
     saveTask();
-    setOpen(false);
   }
 
   function handleChange(e: React.BaseSyntheticEvent) {
     const name = e.target.name;
     const value = e.target.value;
     setFormData({ ...formData, [name]: value });
+    setError('');
   }
 
   return (
@@ -96,6 +100,7 @@ export default function TaskForm() {
       >
         <DialogTitle id="alert-dialog-title">Create a new task</DialogTitle>
         {!isSaving && <DialogContent sx={{width: '30svw'}}>
+        {error && <Alert severity="error" sx={{margin: '1rem 0'}}>{error}</Alert>}
           <form onSubmit={handleCreateTask} id={styles.form}>
           <FormControl>
               <FormLabel htmlFor="assign-to" sx={{margin: '1rem 0 0.5rem 0'}}>Assign to</FormLabel>

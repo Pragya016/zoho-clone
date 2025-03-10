@@ -88,7 +88,7 @@ export default function SidebarMenu() {
           icon={<BarChartIcon />}
         >
           <MenuItem icon={<PieChartIcon />} className='menu-item' onClick={handleClick}>Pie Chart</MenuItem>
-          <MenuItem icon={<ShowChartIcon />} className='menu-item' onClick={handleClick}>Line Chart</MenuItem>
+          {/* <MenuItem icon={<ShowChartIcon />} className='menu-item' onClick={handleClick}>Line Chart</MenuItem> */}
           <MenuItem icon={<BarChartIcon />} className='menu-item' onClick={handleClick}>Bar Chart</MenuItem>
         </SubMenu>
         </>
