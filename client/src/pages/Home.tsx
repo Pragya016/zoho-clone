@@ -9,7 +9,7 @@ import CRMTab from "../components/CRMTab";
 import { useActiveMenu } from "../context/ActiveMenu";
 import Loader from "../components/Loader";
 
-interface AdminInterface {
+export interface AdminInterface {
   data: Admin;
 }
 
@@ -30,10 +30,6 @@ export default function Home() {
       }
   
     }, [])
-
-    useEffect(() => {
-      
-    }, [])
   
     async function checkIsAuthorised(token : string) {
       try {
@@ -49,7 +45,6 @@ export default function Home() {
         navigate('/sign-in');
       }
     }
-  
 
     return (
       <Box sx={{display: 'flex'}}>

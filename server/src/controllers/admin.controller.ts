@@ -6,6 +6,8 @@ import { User } from "../entity/User";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from 'uuid';
 import { config } from "dotenv";
+import { sendMail } from "../actions/mail.action";
+import generator from 'generate-password';
 config();
 
 const userRepository = AppDataSource.getRepository(User);
@@ -109,7 +111,12 @@ async function saveUser(data: any, adminId: string) {
     }
 
     // Hash password before saving
-    const hashedPassword = await bcrypt.hash(data.password || process.env.RANDOM_PASSWORD, 10);
+    const password = generator.generate({
+      length: 10,
+      numbers: true
+    });
+
+    const hashedPassword = await bcrypt.hash(data.password || password, 10);
     const uid = uuidv4();
 
     // Create a new user
@@ -129,6 +136,7 @@ async function saveUser(data: any, adminId: string) {
 
     // Save user to the database
     await userRepository.save(user);
+    sendMail(data.email, data.name, true, password);
     console.log(`User ${user.email} saved in the database`);
   } catch (error) {
     console.log(error);
@@ -321,5 +329,74 @@ export async function handleGetChartData(req: Request, res: Response) {
   } catch (error) {
     console.log(error);
     res.status(500).send('Internal server error');
+  }
+}
+
+export async function handleChangePassword(req: Request, res: Response) {
+  try {
+    const {oldPassword, newPassword, newPasswordRepeated, email} = req.body;
+    if(!email) {
+      return res.status(400).send({message: 'Email is required to change the password'});
+    }
+
+    if(!oldPassword) {
+      return res.status(400).send({message: 'Please enter the old password'});
+    }
+
+    if(!newPassword) {
+      return res.status(400).send({message: 'Please enter the new password'});
+    }
+
+    if(!newPasswordRepeated) {
+      return res.status(400).send({message: 'Please enter the new password again'});
+    }
+
+    const passwordRegExp = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&]).{8,}$/;
+
+    if (!passwordRegExp.test(newPassword)) {
+      return res.status(400).send({
+        message:
+          "Password must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one number, and one special character.",
+      });
+    }
+
+    if(newPassword !== newPasswordRepeated) {
+      return res.status(400).send({message: 'Updated passwords don\'t match'});
+    }
+
+    const user = await userRepository.findOneBy({email: email});
+
+    if(!user) {
+      return res.status(400).send({message: 'User does\'nt exist'});
+    }
+
+    // compare old password with the password stored in the database
+    const isCorrectPassword = await bcrypt.compare(oldPassword, user?.password);
+
+    if(!isCorrectPassword) {
+      return res.status(400).send({message: 'The entered password is incorrect'});
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    user.id = user.id;
+    user.name = user.name;
+    user.email = user.email;
+    user.password = hashedPassword || user.password;
+    user.date_of_birth = user.date_of_birth;
+    user.date_of_joining = user.date_of_joining;
+    user.date_of_leaving = user.date_of_leaving;
+    user.address = user.address;
+    user.phone = user.phone;
+    user.department = user.department;
+    user.designation = user.designation;
+    user.uid = user.uid;
+    user.role = user.role;
+
+    const updatedUser = await userRepository.save(user);
+    res.status(200).send({message: 'Password changed successfully'});
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({message: 'Internal server error'});
   }
 }

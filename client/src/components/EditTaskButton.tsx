@@ -83,8 +83,8 @@ export default function EditTaskButton({data}: Props) {
   }
   return (
     <React.Fragment>
-      <IconButton style={{color: 'grey'}} onClick={handleClickOpen} color='primary'>
-        <EditIcon />
+      <IconButton style={{color: 'grey'}} onClick={handleClickOpen}>
+        <EditIcon color='primary'/>
       </IconButton>
       <Dialog
         open={open}

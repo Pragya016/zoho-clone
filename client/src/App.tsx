@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import { store } from "./store/store";
 import { PaginationProvider } from "./context/Pagination";
 import { ActiveMenuProvider } from "./context/ActiveMenu";
+import ChangePasswordCard from "./components/ChangePassword";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/sign-in" element={<SignInCard />} />
                 <Route path="/sign-up" element={<SignUpCard />} />
+                <Route path="/change-password" element={<ChangePasswordCard />} />
               </Routes>
             </BrowserRouter>
           </ActiveMenuProvider>

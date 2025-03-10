@@ -14,13 +14,13 @@ const transporter = nodemailer.createTransport({
     debug: true
 });
 
-export async function sendMail(receiver_mail: string, name: string) {
+export async function sendMail(receiver_mail: string, name: string, uploading?: boolean, password?: string) {
     try {
         const mailOptions = {
             from: process.env.SENDER_EMAIL,
             to: receiver_mail,
             subject: "Account created successfully.",
-            text: `Hello ${name},\n Welcome to Zoho! Your registration is successful.\n \n Warm Regards, \n Team Zoho`,
+            text: `Hello ${name},\n Welcome to Zoho! Your registration is successful.${uploading && `Use this password to change the password - ${password}`}\n \n Warm Regards, \n Team Zoho`,
         };
 
         transporter.sendMail(mailOptions, (err, info) => {

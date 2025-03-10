@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { handleDeleteUser, handleFileUpload, handleGetChartData, handleGetFilteredUsers, handleGetUsers, handleUpdateUser } from "../controllers/admin.controller";
+import { handleChangePassword, handleDeleteUser, handleFileUpload, handleGetChartData, handleGetFilteredUsers, handleGetUsers, handleUpdateUser } from "../controllers/admin.controller";
 import { upload } from "../config/file.upload";
 
 const router = Router();
@@ -26,6 +26,10 @@ router.post('/upload', upload.single('employees-data'), (req: Request, res: Resp
 
 router.get('/chart-data', (req: Request, res: Response) => {
     handleGetChartData(req, res);
+})
+
+router.post('/change-password', (req: Request, res: Response) => {
+    handleChangePassword(req, res);
 })
 
 export default router;

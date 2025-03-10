@@ -5,6 +5,7 @@ import { fetchData } from "../utility";
 import { updateTasks } from "../store/slices/task.slice";
 import DeleteTaskButton from "./DeleteTaskButton";
 import EditTaskButton from "./EditTaskButton";
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import styles from './css/table.module.css';
 
 export default function TasksTable() {
@@ -14,7 +15,11 @@ export default function TasksTable() {
   const dispatch = useDispatch();
 
   if (tasks.length <= 0) {
-    return <h1>Start creating tasks and assign them</h1>;
+    return <div id={styles.errorContainer}>
+      <FormatListBulletedIcon sx={{fontSize: '5rem'}} />
+      <h1 id={styles.errorHeading}>There are no tasks to display</h1>
+      <p id={styles.errorText}>Click on the 'Create Task' button to create a new task</p>
+    </div>
   }
 
   function handleChange(event: SelectChangeEvent<string>, taskId: string) {

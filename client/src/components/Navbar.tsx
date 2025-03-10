@@ -1,5 +1,6 @@
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import styles from './css/navbar.module.css';
+import Settings from './Settings';
 
 interface Props {
     heading: string;
@@ -12,6 +13,7 @@ export default function Navbar({heading}: Props) {
                 <ArrowForwardIosIcon sx={{marginRight: '5px'}}/>
                 <h1 className={styles.heading}>{heading}</h1>
             </div>
+            <Settings />
         </nav>
     )
 }

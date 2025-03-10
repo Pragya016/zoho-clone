@@ -36,7 +36,6 @@ export async function verifyToken(req: Request, res: Response) {
 export async function handleSignupUser(req: Request, res: Response) {
   try {
     const { name, email, password, role } = req.body;
-
     // Validate user input
     const result = validateInput(name, email, password);
     if (result.status === "rejected") {
@@ -66,7 +65,7 @@ export async function handleSignupUser(req: Request, res: Response) {
     user.uid = uid;
 
     await userRepository.save(user);
-    // sendMail(email, name);
+    sendMail(email, name);
     return res.status(201).send({ message: "User registered successfully" });
   } catch (error) {
     console.log(error);
