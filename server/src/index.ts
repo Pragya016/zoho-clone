@@ -1,5 +1,5 @@
 import express from "express";
-import admin from "firebase-admin";
+// import admin from "firebase-admin";
 import cors from 'cors';
 import { AppDataSource } from "./database/datasource";
 import authRouter from './routers/auth.router';
@@ -19,9 +19,9 @@ server.use(bodyParser.urlencoded({
 }));
 
 // initialize firebase admin
-admin.initializeApp({
-    credential: admin.credential.cert("./service.account.keys.json"),
-});
+// admin.initializeApp({
+//     credential: admin.credential.cert("./service.account.keys.json"),
+// });
 
 // initialize database
 AppDataSource.initialize()
