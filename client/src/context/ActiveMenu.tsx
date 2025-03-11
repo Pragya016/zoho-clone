@@ -22,7 +22,7 @@ const dummyActiveMenu: ActiveMenuContextInterface = {
     lineChart: false,
     barChart: false,
   },
-  setActive: (newActive: ActiveInterface) => {},
+  setActive: () => {},
 };
 
 const ActiveMenuContext = createContext<ActiveMenuContextInterface | undefined>(undefined);

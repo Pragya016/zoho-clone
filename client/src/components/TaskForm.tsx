@@ -17,7 +17,6 @@ import { useAdmin } from "../context/Admin";
 import { useDispatch } from "react-redux";
 import { createTask } from "../store/slices/task.slice";
 import styles from "./css/task.form.module.css";
-import Loader from "./Loader";
 
 const initialState = {
   description: "",

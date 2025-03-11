@@ -1,17 +1,10 @@
 import Box from '@mui/material/Box';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
-
-interface Props {
-  users: User[];
-}
-
-interface User {
-  [key: string]: string | number;
-}
+import { Employees } from '../context/Pagination';
 
 export default function UsersGrid() {
-  const employees = useSelector(state => state.employees);
+  const employees = useSelector((state: Employees) => state.employees);
   
   if(employees.length <= 0) {
     return (

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import TablePagination from '@mui/material/TablePagination';
 import { useSelector } from 'react-redux';
-import { usePagination } from '../context/Pagination';
+import { Employees, usePagination } from '../context/Pagination';
 
 export default function EmployeesTablePaginationDemo() {
-  const allEmployees = useSelector((state) => state.employees);
+  const allEmployees = useSelector((state: Employees) => state.employees);
   const { employees, page, setPage, rowsPerPage, setRowsPerPage } = usePagination();
 
   const handleChangePage = (

@@ -4,10 +4,18 @@ import { fetchData } from '../utility';
 import styles from './css/chart.module.css';
 import { ChartProps, ResponseData } from './PieChart';
 import Navbar from './Navbar';
-  
+import { AxiosResponse } from 'axios';
+
+  export interface ResponseInterface {
+    data: AxiosResponse | {
+      status: number;
+      message: string;
+    };
+  }
+
   export default function BarCharTab({chartType}: ChartProps) {
-  const [xAxis, setXAxis] = React.useState([]);
-  const [yAxis, setYAxis] = React.useState([]);
+  const [xAxis, setXAxis] = React.useState<number[]>([]);
+  const [yAxis, setYAxis] = React.useState<string[]>([]);
   
   React.useEffect(() => {
     getChartData();
@@ -16,9 +24,10 @@ import Navbar from './Navbar';
   async function getChartData() {
     try {
         const response = await fetchData(`/api/admin/chart-data?type=${chartType}`, 'GET');
+        const data = (response as ResponseInterface).data;
         if(response.status === 200) {
-            const xAxisData = response.data.map((data: ResponseData) => +data.userCount);
-            const yAxisData = response.data.map((data: ResponseData) => {
+            const xAxisData = Array.isArray(data) && data.map((data: ResponseData) => +data.userCount);
+            const yAxisData = Array.isArray(data) && data.map((data: ResponseData) => {
               if(chartType === 'designation') {
                 return data.users_designation
               }

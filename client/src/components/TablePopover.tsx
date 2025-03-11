@@ -3,9 +3,9 @@ import Popover from '@mui/material/Popover';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteRowButton from './DeleteRowButton';
 import EditRowButton from './EditRowButton';
-import { Employee } from './CRMTab';
-import { useDispatch } from 'react-redux';
 import styles from './css/table.popover.module.css';
+import { Employee } from '../context/Pagination';
+import { IconButton } from '@mui/material';
 
 interface PopoverProps {
   data: Employee;
@@ -17,7 +17,6 @@ export default function TablePopover({data}: PopoverProps) {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const dispatch = useDispatch();
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -28,7 +27,9 @@ export default function TablePopover({data}: PopoverProps) {
 
   return (
     <div>
-      <MoreVertIcon aria-describedby={id} onClick={handleClick} sx={{cursor: 'pointer'}}/>
+      <IconButton onClick={handleClick}>
+        <MoreVertIcon aria-describedby={id} sx={{cursor: 'pointer'}}/>
+      </IconButton>
       <Popover
         id={id}
         open={open}

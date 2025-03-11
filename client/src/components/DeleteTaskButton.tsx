@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { fetchData } from "../utility";
 import { deleteTask } from "../store/slices/task.slice";
 import { IconButton } from "@mui/material";
+import {  AxiosResponse } from "axios";
 
 interface Props {
   taskId: string
@@ -33,8 +34,8 @@ export default function DeleteTaskButton({ taskId }: Props) {
 
   async function removeTask(id: string) {
     try {
-      const { data } = await fetchData(`/api/tasks/${id}`, "DELETE");
-      dispatch(deleteTask(data.id));
+      const response = await fetchData(`/api/tasks/${id}`, "DELETE");
+      dispatch(deleteTask((response as AxiosResponse).data.id));
     } catch (error) {
       console.error(error);
     }

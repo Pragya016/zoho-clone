@@ -8,9 +8,13 @@ import EditTaskButton from "./EditTaskButton";
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import styles from './css/table.module.css';
 
+interface Tasks {
+  tasks: {[key: string]: string}[];
+}
+
 export default function TasksTable() {
   const [selectedStatus, setSelectedStatus] = useState<{ [key: string]: string }>({});
-  const tasks = useSelector((state: any) => state.tasks);
+  const tasks = useSelector((state: Tasks) => state.tasks);
   const headings = tasks.length > 0 ? Object.keys(tasks[0]) : [];
   const dispatch = useDispatch();
 
@@ -94,38 +98,3 @@ export default function TasksTable() {
     </div>
   );
 }
-
-// import { DataGrid } from '@mui/x-data-grid';
-// import { Box } from '@mui/material';
-// import { useSelector } from 'react-redux';
-
-// export default function DataGridDemo() {
-//   const tasks = useSelector(state => state.tasks);
-//   const headings = tasks && tasks.length > 0 ? Object.keys(tasks[0]) : [];
-//   const cols = headings && headings.length > 0
-//     ? headings.map((heading: string) => ({
-//         field: heading,
-//         headerName: heading.charAt(0).toUpperCase() + heading.slice(1),
-//         width: 150,
-//       }))
-//     : [];
-
-//   return (
-//     <Box sx={{height: 'auto', width: '80%', margin: '2rem auto'}}>
-//       <DataGrid
-//         rows={tasks}
-//         columns={cols}
-//         initialState={{
-//           pagination: {
-//             paginationModel: {
-//               pageSize: 5,
-//             },
-//           },
-//         }}
-//         pageSizeOptions={[5]}
-//         // checkboxSelection
-//         disableRowSelectionOnClick
-//       />
-//     </Box>
-//   );
-// }

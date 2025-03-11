@@ -1,6 +1,5 @@
 import { IconButton } from "@mui/material";
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
-import {ActiveInterface} from '../context/ActiveMenu';
 import { useNavigate } from "react-router-dom";
 import LogoutModal from "./LogoutAlertDialogue";
 import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck";
@@ -15,7 +14,7 @@ import userImage from "../assets/default-user-icon.jpg";
 import styles from "./css/sidebar.module.css";
 import { useAdmin } from "../context/Admin";
 import { useActiveMenu } from "../context/ActiveMenu";
-import ShowChartIcon from '@mui/icons-material/ShowChart';
+// import ShowChartIcon from "@mui/icons-material/ShowChart";
 
 export default function SidebarMenu() {
   const navigate = useNavigate();
@@ -29,24 +28,24 @@ export default function SidebarMenu() {
   }
 
   function handleClick(e: BaseSyntheticEvent) {
-    const targetElement = e.target.closest('.menu-item');
+    const targetElement = e.target.closest(".menu-item");
     const menuTextContent = targetElement.textContent;
 
     if (!targetElement) return;
 
-    setActive((prevState: ActiveInterface) => ({
-      ...prevState,
-      crm: menuTextContent === 'Customer Relationship Management',
-      tasks: menuTextContent === 'Tasks Management',
-      pieChart: targetElement.firstChild.lastChild.textContent === 'Pie Chart',
-      lineChart: targetElement.firstChild.lastChild.textContent === 'Line Chart',
-      barChart: targetElement.firstChild.lastChild.textContent === 'Bar Chart',
-    }));
+    setActive({
+      crm: menuTextContent === "Customer Relationship Management",
+      tasks: menuTextContent === "Tasks Management",
+      pieChart: targetElement.firstChild.lastChild.textContent === "Pie Chart",
+      lineChart:
+        targetElement.firstChild.lastChild.textContent === "Line Chart",
+      barChart: targetElement.firstChild.lastChild.textContent === "Bar Chart",
+    });
   }
 
   return (
     <Sidebar id={styles.sidebar} width="350px" collapsed={isCollapsed}>
-      <Menu style={{height: '100%'}}>
+      <Menu style={{ height: "100%" }}>
         <div id={styles.topContainer}>
           <IconButton
             onClick={() => setIsCollapsed((prevState) => !prevState)}
@@ -74,30 +73,38 @@ export default function SidebarMenu() {
             <p id={styles.text}>Logged in as {admin?.role}</p>
           </div>
         </div>
-        {admin && admin.role === 'admin' && 
-        <>
-        <MenuItem
-          icon={<PeopleIcon />}
-          className='menu-item'
-          onClick={handleClick}
-        >
-          Customer Relationship Management
-        </MenuItem>
-        <SubMenu
-          label="Reports and Analytics"
-          icon={<BarChartIcon />}
-        >
-          <MenuItem icon={<PieChartIcon />} className='menu-item' onClick={handleClick}>Pie Chart</MenuItem>
-          {/* <MenuItem icon={<ShowChartIcon />} className='menu-item' onClick={handleClick}>Line Chart</MenuItem> */}
-          <MenuItem icon={<BarChartIcon />} className='menu-item' onClick={handleClick}>Bar Chart</MenuItem>
-        </SubMenu>
-        </>
-        }
+        {admin && admin.role === "admin" && (
+          <>
+            <MenuItem
+              icon={<PeopleIcon />}
+              className="menu-item"
+              onClick={handleClick}
+            >
+              Customer Relationship Management
+            </MenuItem>
+            <SubMenu label="Reports and Analytics" icon={<BarChartIcon />}>
+              <MenuItem
+                icon={<PieChartIcon />}
+                className="menu-item"
+                onClick={handleClick}
+              >
+                Pie Chart
+              </MenuItem>
+              {/* <MenuItem icon={<ShowChartIcon />} className='menu-item' onClick={handleClick}>Line Chart</MenuItem> */}
+              <MenuItem
+                icon={<BarChartIcon />}
+                className="menu-item"
+                onClick={handleClick}
+              >
+                Bar Chart
+              </MenuItem>
+            </SubMenu>
+          </>
+        )}
         <MenuItem
           onClick={handleClick}
           icon={<PlaylistAddCheckIcon />}
           className={`menu-item ${active.tasks ? styles.activeItem : ""}`}
-          style={active.tasks ? active : {}}
         >
           Tasks Management
         </MenuItem>

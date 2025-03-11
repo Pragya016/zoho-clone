@@ -9,12 +9,13 @@ import { useDispatch } from "react-redux";
 import { fetchData } from "../utility";
 import { deleteEmployee } from "../store/slices/employee.slice";
 import { IconButton } from "@mui/material";
+import { AxiosResponse } from "axios";
 
 interface Props {
   data: DataInterface;
 }
 
-interface DataInterface {
+export interface DataInterface {
   [key: string | number]: string;
 }
 
@@ -31,14 +32,14 @@ export default function DeleteRowButton({ data }: Props) {
   };
 
   const handleDelete = () => {
-    deleteUser(data.id);
+    deleteUser(+data.id);
     setOpen(false);
   };
 
   async function deleteUser(id: number) {
     try {
-      const { data } = await fetchData(`/api/admin/${id}`, "DELETE");
-      dispatch(deleteEmployee(data.response));
+      const res = await fetchData(`/api/admin/${id}`, "DELETE");
+      dispatch(deleteEmployee((res as AxiosResponse).data.response));
     } catch (error) {
       console.error(error);
     }

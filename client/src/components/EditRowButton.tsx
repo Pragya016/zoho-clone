@@ -6,11 +6,12 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import EditIcon from '@mui/icons-material/Edit';
-import { Employee } from './CRMTab';
 import { Alert, IconButton } from '@mui/material';
 import { fetchData } from '../utility';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { editEmployees } from '../store/slices/employee.slice';
+import { AxiosResponse } from 'axios';
+import { Employee } from '../context/Pagination';
 
 interface Props {
   data: Employee;
@@ -100,7 +101,7 @@ export default function EditRowButton({data}: Props) {
   async function updateUserDetails() {
     try {
         const res = await fetchData(`/api/admin/${data.id}`, 'PATCH', formData);
-        dispatch(editEmployees(res.data.response));
+        dispatch(editEmployees((res as AxiosResponse).data.response));
         setOpen(false);
     } catch (error) {
         console.error(error);

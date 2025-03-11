@@ -19,7 +19,6 @@ export default function Home() {
     const { active } = useActiveMenu();
     const PieChart = lazy(() => import("../components/PieChart"));
     const BarChart = lazy(() => import("../components/BarChart"));
-    const LineChart = lazy(() => import("../components/LineChart"));
     const TasksTab = lazy(() => import("../components/TasksTab"));
 
     useEffect(() => {
@@ -55,7 +54,6 @@ export default function Home() {
         {active.tasks && <TasksTab />}
         {admin && admin.role === 'admin' && active.pieChart && <PieChart chartType='department'/>}
         {admin && admin.role === 'admin' && active.barChart && <BarChart chartType='department'/>}
-        {admin && admin.role === 'admin' && active.lineChart && <LineChart chartType='department'/>}
       </Suspense>
       </Box>
       </Box>

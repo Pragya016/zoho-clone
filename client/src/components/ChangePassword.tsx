@@ -5,6 +5,7 @@ import { ResponseInterface } from "./SignInCard";
 import { useAdmin } from "../context/Admin";
 import { Alert, Button, FormControl, FormLabel, TextField } from "@mui/material";
 import styles from './css/change.password.module.css';
+import { AxiosResponse } from "axios";
 
 interface FormDataInterface {
   [key: string]: string;
@@ -35,7 +36,7 @@ export default function ChangePasswordCard() {
         try {
           const res = await fetchData(`/api/auth?idToken=${token}`, 'GET');
   
-          if((res as ResponseInterface).status !== 200) {
+          if((res as AxiosResponse).status !== 200) {
             navigate('/sign-in');
           }
 
@@ -62,14 +63,14 @@ export default function ChangePasswordCard() {
 
     async function changePassword() {
       try {
-        const res = await fetchData('/api/admin/change-password', 'POST', {...formData, email: admin.email});
+        const res = await fetchData('/api/admin/change-password', 'POST', {...formData, email: admin?.email});
 
         if(res.status === 200) {
           localStorage.removeItem('idToken');
           return navigate('/sign-in')
         }
         
-        setError(res.message);
+        setError((res as ResponseInterface).message);
       } catch (error) {
         console.log(error);
       }

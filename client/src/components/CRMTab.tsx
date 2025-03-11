@@ -8,13 +8,14 @@ import Loader from "./Loader";
 import { usePagination } from "../context/Pagination";
 import { Box } from "@mui/material";
 import Navbar from "./Navbar";
+import { AxiosResponse } from "axios";
 
 export default function CRMTab() {
   const { admin } = useAdmin();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState<boolean>(true);
   const { page, rowsPerPage, setEmployees } = usePagination();
-  const allEmployees = useSelector((state) => state.employees);
+  const allEmployees = useSelector((state: {employees}) => state.employees);
 
   useEffect(() => {
     if (admin) {
@@ -32,7 +33,7 @@ export default function CRMTab() {
   async function fetchEmployees() {
     try {
       const res = await fetchData(`/api/admin`, "GET");
-      dispatch(addEmployee(res.data));
+      dispatch(addEmployee((res as AxiosResponse).data));
     } catch (error) {
       console.error(error);
     } finally {

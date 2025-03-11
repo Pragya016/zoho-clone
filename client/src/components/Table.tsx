@@ -1,9 +1,8 @@
 import { useDispatch } from "react-redux";
 import { fetchData } from "../utility";
 import styles from "./css/table.module.css";
-import TablePopover from "./TablePopover";
 import { addEmployee } from "../store/slices/employee.slice";
-import { useRef } from "react";
+import { BaseSyntheticEvent, useRef } from "react";
 import { useAdmin } from "../context/Admin";
 import InfoIcon from "@mui/icons-material/Info";
 import { usePagination } from "../context/Pagination";
@@ -12,7 +11,7 @@ import { Button } from "@mui/material";
 import UploadIcon from "@mui/icons-material/Upload";
 import EmployeesTablePaginationDemo from "./Pagination";
 import EditRowButton from "./EditRowButton";
-import DeleteRowButton from "./DeleteRowButton";
+import DeleteRowButton, { DataInterface } from "./DeleteRowButton";
 
 export default function BasicTable() {
   const { admin } = useAdmin();
@@ -105,7 +104,7 @@ export default function BasicTable() {
           </tr>
         </thead>
         <tbody>
-          {employees.map((emp: object, rowIndex: number) => (
+          {employees.map((emp: DataInterface, rowIndex: number) => (
             <tr key={rowIndex} className={styles.row}>
               {headings.map((heading: string, colIndex: number) => (
                 <td className={styles.cols} key={colIndex}>
