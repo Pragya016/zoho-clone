@@ -7,7 +7,7 @@ This project is a web app designed for both admins and users to manage tasks, em
 ## Features
 
 ### User Authentication
-- **Sign In/Sign Up**: Users and admins can sign in and sign up. Admins are authenticated using JWT (JSON Web Tokens).
+- **Sign In/Sign Up**: Users and admins can sign in and sign up. Admins are authenticated using JWT (JSON Web Tokens). The passwords wil be save in the database after hashing.
 - **Welcome Email**: Users receive a welcome email after signing up.
 - **Password Management**: Users can change their password via the settings menu once logged in.
 
