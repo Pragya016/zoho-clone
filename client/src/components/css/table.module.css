@@ -22,6 +22,7 @@
 
 #table {
   width: 100%;
+  border-collapse: collapse;
 }
 
 .row {
@@ -29,14 +30,16 @@
 }
 
 .theading {
-  background-color: var(--cols-color);
-  color: white;
+  /* background-color: var(--cols-color); */
+  /* color: white; */
+  background-color: whitesmoke;
+  color: grey;
   padding: 1rem;
   width: 10px;
 }
 
 .cols {
-  background-color: whitesmoke;
+  background-color: white;
   padding: 1rem;
   color: grey;
   font-weight: 500;

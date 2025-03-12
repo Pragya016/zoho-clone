@@ -29,6 +29,7 @@ export default function EmployeesTablePaginationDemo() {
 
   return (
       <TablePagination
+        style={{background: 'whitesmoke', color: 'grey'}}
         component="div"
         count={allEmployees.length}
         page={page}
