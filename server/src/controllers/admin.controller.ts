@@ -136,7 +136,7 @@ async function saveUser(data: any, adminId: string) {
 
     // Save user to the database
     await userRepository.save(user);
-    sendMail(data.email, data.name, true, password);
+    sendMail(data.email, data.name, password, 'user');
     console.log(`User ${user.email} saved in the database`);
   } catch (error) {
     console.log(error);

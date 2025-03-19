@@ -12,6 +12,7 @@ import UploadIcon from "@mui/icons-material/Upload";
 import EmployeesTablePaginationDemo from "./Pagination";
 import EditRowButton from "./EditRowButton";
 import DeleteRowButton, { DataInterface } from "./DeleteRowButton";
+import {ToastContainer, toast} from 'react-toastify';
 
 export default function BasicTable() {
   const { admin } = useAdmin();
@@ -28,6 +29,12 @@ export default function BasicTable() {
 
   function handleFileChange(e: BaseSyntheticEvent) {
     const file = e.target.files[0];
+
+    if(file.type !== 'text/csv') {
+      toast.error('Only CSV file can be uploaded');
+      return;
+    }
+
     if (file) {
       uploadData(file);
     }
@@ -49,6 +56,7 @@ export default function BasicTable() {
       );
 
       if (res.status === 201) {
+        toast.success('File uploaded successfully')
         dispatch(addEmployee(res.data.data));
       }
 
@@ -71,6 +79,7 @@ export default function BasicTable() {
   }
 
   return (
+    <>
     <div id={styles.content}>
       <div id={styles.topContainer}>
         <TableFilterForm />
@@ -123,5 +132,7 @@ export default function BasicTable() {
       </div>
       <EmployeesTablePaginationDemo />
     </div>
+    <ToastContainer />
+    </>
   );
 }

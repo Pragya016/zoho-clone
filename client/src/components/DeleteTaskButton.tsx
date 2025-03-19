@@ -10,6 +10,7 @@ import { fetchData } from "../utility";
 import { deleteTask } from "../store/slices/task.slice";
 import { IconButton } from "@mui/material";
 import {  AxiosResponse } from "axios";
+import { toast, ToastContainer } from "react-toastify";
 
 interface Props {
   taskId: string
@@ -35,7 +36,12 @@ export default function DeleteTaskButton({ taskId }: Props) {
   async function removeTask(id: string) {
     try {
       const response = await fetchData(`/api/tasks/${id}`, "DELETE");
-      dispatch(deleteTask((response as AxiosResponse).data.id));
+
+      if(response.status === 200) {
+        dispatch(deleteTask((response as AxiosResponse).data.id));
+        toast.info('Task deleted from the table');
+      }
+
     } catch (error) {
       console.error(error);
     }
@@ -66,6 +72,7 @@ export default function DeleteTaskButton({ taskId }: Props) {
           </Button>
         </DialogActions>
       </Dialog>
+      <ToastContainer closeOnClick={true}/>
     </React.Fragment>
   );
 }

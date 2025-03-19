@@ -60,7 +60,7 @@ export async function handleSignupUser(req: Request, res: Response) {
     user.name = name;
     user.email = email;
     user.password = hashedPassword;
-    user.role = role;
+    user.role = role || 'admin';
     user.uid = uid;
 
     await userRepository.save(user);

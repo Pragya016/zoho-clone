@@ -11,6 +11,7 @@ import { fetchData } from "../utility";
 import { useDispatch } from "react-redux";
 import { updateTasks } from "../store/slices/task.slice";
 import { AxiosResponse } from "axios";
+import { toast } from "react-toastify";
 
 interface Props {
   data: FormDataInterface;
@@ -80,6 +81,7 @@ export default function EditTaskButton({ data }: Props) {
 
     updateTaskDetails();
     setFormData(initialState);
+    setOpen(false);
   }
 
   async function updateTaskDetails() {
@@ -89,8 +91,12 @@ export default function EditTaskButton({ data }: Props) {
         assigned_by: formData.assignedBy,
         assigned_to: formData.assignedTo,
       });
-      dispatch(updateTasks((res as AxiosResponse).data));
-      setOpen(false);
+
+      if(res.status === 200) {
+        dispatch(updateTasks((res as AxiosResponse).data));
+        toast.info('Row updated successfully');
+      }
+
     } catch (error) {
       console.error(error);
     }

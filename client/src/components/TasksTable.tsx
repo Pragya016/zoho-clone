@@ -7,6 +7,7 @@ import DeleteTaskButton from "./DeleteTaskButton";
 import EditTaskButton from "./EditTaskButton";
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import styles from './css/table.module.css';
+import { toast, ToastContainer } from "react-toastify";
 
 interface Tasks {
   tasks: {[key: string]: string}[];
@@ -42,15 +43,18 @@ export default function TasksTable() {
         const res = await fetchData(`/api/tasks/${taskId}`, 'PATCH', {status: value});
 
         if(res.status === 200) {
-            dispatch(updateTasks(res.data));
+          dispatch(updateTasks(res.data));
+          toast.success('Task status updated successfully');
         }
 
     } catch (error) {
         console.error(error);
+        toast.error('Something went wrong. Couldn\'t update task status');
     }
   }
 
   return (
+    <>
     <div id={styles.content}>
     <table id={styles.table}>
       <thead>
@@ -96,5 +100,7 @@ export default function TasksTable() {
       </tbody>
     </table>
     </div>
+    <ToastContainer closeOnClick={true}/>
+    </>
   );
 }
