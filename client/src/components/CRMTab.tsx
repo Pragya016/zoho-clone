@@ -16,12 +16,15 @@ export default function CRMTab() {
   const [loading, setLoading] = useState<boolean>(true);
   const { page, rowsPerPage, setEmployees } = usePagination();
   const allEmployees = useSelector((state: {employees}) => state.employees);
+  const token = localStorage.getItem('idToken');
 
   useEffect(() => {
     if (admin) {
-      fetchEmployees();
+      if(token) {
+        fetchEmployees(token);
+      }
     }
-  }, [admin]);
+  }, [admin, token]);
 
   useEffect(() => {
     const startIndex = page * rowsPerPage;
@@ -30,9 +33,9 @@ export default function CRMTab() {
     setEmployees(paginatedEmployees);
   }, [page, rowsPerPage, setEmployees, allEmployees]);
 
-  async function fetchEmployees() {
+  async function fetchEmployees(token: string) {
     try {
-      const res = await fetchData(`/api/admin`, "GET");
+      const res = await fetchData(`/api/admin`, "GET",null, token);
       dispatch(addEmployee((res as AxiosResponse).data));
     } catch (error) {
       console.error(error);

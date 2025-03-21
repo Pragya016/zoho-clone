@@ -3,31 +3,52 @@ import axios from "axios";
 export async function fetchData(
   endpoint: string,
   method: string,
-  data?: object,
-  headers?: object
+  data?: object | null,
+  token?: string
 ) {
   try {
     const baseUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
+    const config = {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    }
     let result;
 
     switch (method) {
       case "POST":
-        if (!headers) {
+        if (!token) {
           result = await axios.post(baseUrl + endpoint, data);
           return result;
         }
 
-        result = await axios.post(baseUrl + endpoint, data, headers);
+        result = await axios.post(baseUrl + endpoint, data, config);
         return result;
 
       case "DELETE":
-        result = await axios.delete(baseUrl + endpoint);
+        if (!token) {
+          result = await axios.delete(baseUrl + endpoint);
+          return result;
+        }
+
+        result = await axios.delete(baseUrl + endpoint, config);
         return result;
 
       case "PATCH":
-        result = await axios.patch(baseUrl + endpoint, data);
+        if(!token) {
+          result = await axios.patch(baseUrl + endpoint, data);
+          return result;
+        }
+
+        result = await axios.patch(baseUrl + endpoint, data, config);
         return result;
+
       default:
+        if (token) {
+          result = await axios.get(baseUrl + endpoint, config);
+          return result;
+        }
+
         result = await axios.get(baseUrl + endpoint);
         return result;
     }

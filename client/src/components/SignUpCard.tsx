@@ -29,6 +29,7 @@ function SignUpCard() {
   async function handleRedirect(token: string) {
     try {
       const res = await fetchData(`/api/auth?idToken=${token}`, "GET");
+      console.log(res);
       if ((res as ResponseInterface).status === 201) {
         setFormData(initialState);
         navigate("/");

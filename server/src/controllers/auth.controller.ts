@@ -13,7 +13,7 @@ const userRepository = AppDataSource.getRepository(User);
 export async function verifyToken(req: Request, res: Response) {
   const { idToken } = req.query;
   if (!idToken) {
-    return res.status(401).send({ message: "You are not authorized to view this page" });
+    return res.status(400).send({ message: "Access denied. No token provided" });
   }
 
   try {
@@ -26,8 +26,14 @@ export async function verifyToken(req: Request, res: Response) {
       role: decodedToken.role,
       status: 'success'
     }
+    
+    if(!decodedToken) {
+      return res.status(400).send({message: 'Invalid token'});
+    }
+
     res.status(200).send(response);
   } catch (error) {
+    console.log(error)
     return res.status(403).send({ message: "The token is not valid" });
   }
 }

@@ -1,17 +1,18 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import EditIcon from '@mui/icons-material/Edit';
-import { Alert, IconButton } from '@mui/material';
-import { fetchData } from '../utility';
-import { useDispatch } from 'react-redux';
-import { editEmployees } from '../store/slices/employee.slice';
-import { AxiosResponse } from 'axios';
-import { Employee } from '../context/Pagination';
+import * as React from "react";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import EditIcon from "@mui/icons-material/Edit";
+import { Alert, IconButton } from "@mui/material";
+import { fetchData } from "../utility";
+import { useDispatch } from "react-redux";
+import { editEmployees } from "../store/slices/employee.slice";
+import { AxiosResponse } from "axios";
+import { Employee } from "../context/Pagination";
+import { toast, ToastContainer } from "react-toastify";
 
 interface Props {
   data: Employee;
@@ -25,22 +26,28 @@ export interface FormDataInterface {
 }
 
 const initialState = {
-  name: '',
-  email: '',
-  phone: '',
-  address: '',
-}
+  name: "",
+  email: "",
+  phone: "",
+  address: "",
+};
 
-export default function EditRowButton({data}: Props) {
+export default function EditRowButton({ data }: Props) {
   const [open, setOpen] = React.useState(false);
-  const [formData, setFormData] = React.useState<FormDataInterface>(initialState);
-  const [error, setError] = React.useState<string>('');
+  const [formData, setFormData] =
+    React.useState<FormDataInterface>(initialState);
+  const [error, setError] = React.useState<string>("");
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    setFormData({email: data.email, name: data.name, phone: data.phone, address: data.address});
+    setFormData({
+      email: data.email,
+      name: data.name,
+      phone: data.phone,
+      address: data.address,
+    });
   }, [data]);
-  
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -54,43 +61,43 @@ export default function EditRowButton({data}: Props) {
     const value = e.target.value;
     setFormData({
       ...formData,
-      [name]: value
-    })
+      [name]: value,
+    });
 
-    if(error) {
-      setError('');
+    if (error) {
+      setError("");
     }
   }
 
   function handleSaveChanges() {
-    if(!formData.name) {
-      setError('Please fill this field - Name');
+    if (!formData.name) {
+      setError("Please fill this field - Name");
       return;
     }
 
-    if(!formData.email) {
-      setError('Please fill this field - Email');
+    if (!formData.email) {
+      setError("Please fill this field - Email");
       return;
     }
 
     const emailRegExp = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/;
     if (!emailRegExp.test(formData.email)) {
-      setError('Email is not valid');
+      setError("Email is not valid");
       return;
     }
 
-    if(!formData.phone) {
-      setError('Please fill this field - Contact No.');
+    if (!formData.phone) {
+      setError("Please fill this field - Contact No.");
       return;
     }
 
-    if(formData.phone.trim().length < 10) {
-      setError('Contact No. must include 10 digits');
+    if (formData.phone.trim().length < 10) {
+      setError("Contact No. must include 10 digits");
       return;
     }
 
-    if(!formData.address) {
-      setError('Please fill this field - Address');
+    if (!formData.address) {
+      setError("Please fill this field - Address");
       return;
     }
 
@@ -100,29 +107,33 @@ export default function EditRowButton({data}: Props) {
 
   async function updateUserDetails() {
     try {
-        const res = await fetchData(`/api/admin/${data.id}`, 'PATCH', formData);
-        dispatch(editEmployees((res as AxiosResponse).data.response));
-        setOpen(false);
+      const token = localStorage.getItem("idToken");
+      
+      if (!token) {
+        toast.error("Something went wrong");
+        return;
+      }
+
+      const res = await fetchData(`/api/admin/${data.id}`, "PATCH", formData, token);
+      setOpen(false);
+      dispatch(editEmployees((res as AxiosResponse).data.response));
     } catch (error) {
-        console.error(error);
+      console.error(error);
     }
   }
-  console.log(formData);
+
   return (
     <React.Fragment>
       <IconButton onClick={handleClickOpen}>
-        <EditIcon color='primary'/>
+        <EditIcon color="primary" />
       </IconButton>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-      >
+      <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Edit Row Data</DialogTitle>
         <DialogContent>
-          {error && <Alert severity='error'>{error}</Alert>}
-            <TextField
+          {error && <Alert severity="error">{error}</Alert>}
+          <TextField
             autoFocus
-            onFocus={() => setError('')}
+            onFocus={() => setError("")}
             required
             margin="dense"
             id="name"
@@ -136,7 +147,7 @@ export default function EditRowButton({data}: Props) {
           />
           <TextField
             autoFocus
-            onFocus={() => setError('')}
+            onFocus={() => setError("")}
             required
             margin="dense"
             id="email"
@@ -150,7 +161,7 @@ export default function EditRowButton({data}: Props) {
           />
           <TextField
             autoFocus
-            onFocus={() => setError('')}
+            onFocus={() => setError("")}
             required
             margin="dense"
             id="phone"
@@ -162,9 +173,9 @@ export default function EditRowButton({data}: Props) {
             value={formData.phone}
             onChange={handleChange}
           />
-                    <TextField
+          <TextField
             autoFocus
-            onFocus={() => setError('')}
+            onFocus={() => setError("")}
             required
             margin="dense"
             id="address"
@@ -182,6 +193,7 @@ export default function EditRowButton({data}: Props) {
           <Button onClick={handleSaveChanges}>Save Changes</Button>
         </DialogActions>
       </Dialog>
+      <ToastContainer closeOnClick={true} />
     </React.Fragment>
   );
 }

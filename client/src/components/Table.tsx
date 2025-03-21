@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import { fetchData } from "../utility";
 import styles from "./css/table.module.css";
 import { addEmployee } from "../store/slices/employee.slice";
-import { BaseSyntheticEvent, useRef } from "react";
+import { BaseSyntheticEvent, useEffect, useRef, useState } from "react";
 import { useAdmin } from "../context/Admin";
 import InfoIcon from "@mui/icons-material/Info";
 import { usePagination } from "../context/Pagination";
@@ -20,6 +20,14 @@ export default function BasicTable() {
   const headings = employees.length > 0 && [...Object.keys(employees[0])];
   const dispatch = useDispatch();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const idToken = localStorage.getItem('idToken');
+  const [token, setToken] = useState<string>('');
+
+  useEffect(() => {
+    if(idToken) {
+      setToken(idToken);
+    }
+  }, [idToken])
 
   function handleUpload() {
     if (fileInputRef.current) {
@@ -52,7 +60,8 @@ export default function BasicTable() {
       const res = await fetchData(
         `/api/admin/upload?adminId=${admin.id}`,
         "POST",
-        formData
+        formData,
+        token
       );
 
       if (res.status === 201) {

@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { config } from "dotenv";
 import { sendMail } from "../actions/mail.action";
 import generator from 'generate-password';
+
 config();
 
 const userRepository = AppDataSource.getRepository(User);
@@ -172,7 +173,6 @@ export async function handleDeleteUser(req: Request, res: Response) {
 export async function handleGetUsers(req: Request, res: Response) {
   try {
     const users = await userRepository.findBy({ role: "user" });
-
     if(users.length > 0) {
       const filteredUsers = users.map((user) => {
         const filteredUser = {
@@ -202,7 +202,6 @@ export async function handleUpdateUser(req: Request, res: Response) {
   try {
     const { userId } = req.params;
     const data = req.body;
-
     // Find user by ID
     const user = await userRepository.findOneBy({ id: +userId, role: "user" });
     if (!user) {

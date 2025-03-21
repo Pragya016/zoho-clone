@@ -10,6 +10,7 @@ import { fetchData } from "../utility";
 import { deleteEmployee } from "../store/slices/employee.slice";
 import { IconButton } from "@mui/material";
 import { AxiosResponse } from "axios";
+import { toast, ToastContainer } from "react-toastify";
 
 interface Props {
   data: DataInterface;
@@ -38,7 +39,20 @@ export default function DeleteRowButton({ data }: Props) {
 
   async function deleteUser(id: number) {
     try {
-      const res = await fetchData(`/api/admin/${id}`, "DELETE");
+      const token = localStorage.getItem('idToken');
+
+      if(!token) {
+        toast.error('Something went wrong');
+        return;
+      }
+
+      const res = await fetchData(`/api/admin/${id}`, "DELETE", null, token);
+
+      if(res.status !== 200) {
+        toast.error("Something went wrong. Couldn't delete user");
+        return;
+      }
+
       dispatch(deleteEmployee((res as AxiosResponse).data.response));
     } catch (error) {
       console.error(error);
@@ -71,6 +85,7 @@ export default function DeleteRowButton({ data }: Props) {
           </Button>
         </DialogActions>
       </Dialog>
+      <ToastContainer closeOnClick={true}/>
     </React.Fragment>
   );
 }

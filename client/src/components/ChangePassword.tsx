@@ -6,6 +6,7 @@ import { useAdmin } from "../context/Admin";
 import { Alert, Button, FormControl, FormLabel, TextField } from "@mui/material";
 import styles from './css/change.password.module.css';
 import { AxiosResponse } from "axios";
+import { toast, ToastContainer } from "react-toastify";
 
 interface FormDataInterface {
   [key: string]: string;
@@ -63,7 +64,14 @@ export default function ChangePasswordCard() {
 
     async function changePassword() {
       try {
-        const res = await fetchData('/api/admin/change-password', 'POST', {...formData, email: admin?.email});
+        const token = localStorage.getItem('idToken');
+
+        if(!token) {
+          toast.error("You're not authorised to perform this action");
+          return;
+        }
+        
+        const res = await fetchData('/api/admin/change-password', 'POST', {...formData, email: admin.email}, token);
 
         if(res.status === 200) {
           localStorage.removeItem('idToken');
@@ -77,6 +85,7 @@ export default function ChangePasswordCard() {
     }
 
     return (
+      <>
       <div id={styles.backdrop}>
       <form onSubmit={handleChangePassword} id={styles.card}>
         <h1 id={styles.heading}>Change Password</h1>
@@ -96,5 +105,7 @@ export default function ChangePasswordCard() {
           <Button type="submit" variant="contained" id={styles.submitButton}>Change Password</Button>
       </form>
       </div>
+      <ToastContainer closeOnClick={true}/>
+      </>
     )
 }
