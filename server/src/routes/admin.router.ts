@@ -47,6 +47,7 @@ router.post(
   "/upload",
   //@ts-ignore
   authenticate,
+  upload.single('employees-data'),
   handleFileUpload
 );
 

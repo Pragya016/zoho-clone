@@ -74,6 +74,7 @@ export default function BasicTable() {
       }
     } catch (error) {
       console.error(error);
+      toast.error("Something went wrong. Couldn't upload file");
     }
   }
 

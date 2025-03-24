@@ -13,6 +13,7 @@ export async function fetchData(
         'Authorization': `Bearer ${token}`
       }
     }
+
     let result;
 
     switch (method) {

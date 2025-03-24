@@ -18,7 +18,7 @@ export async function handleFileUpload(req: Request, res: Response) {
   try {
     const file = req.file;
     const { adminId } = req.query;
-
+    console.log(file);
     if (!file) {
       return res.status(400).json({ message: "No file uploaded" });
     }

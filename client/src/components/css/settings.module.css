@@ -2,11 +2,16 @@
   display: flex;
   align-items: center;
   color: grey;
-  padding: 1rem;
+  padding: 0.5rem;
   cursor: pointer;
 }
 
-.key_icon {
+.menu_item:hover {
+  background-color: whitesmoke;
+  transition: 0.2s;
+}
+
+.icon {
   margin-right: 0.5rem;
   border-right: 1px solid lightgrey;
   padding-right: 0.5rem;
