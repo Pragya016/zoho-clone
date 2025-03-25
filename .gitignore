@@ -3,6 +3,7 @@ client/node_modules
 server/.env
 server/node_modules
 server/service.account.keys.json
+server/src/uploads
 # Logs
 logs
 *.log
