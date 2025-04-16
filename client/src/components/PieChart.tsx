@@ -93,7 +93,7 @@ export default function PieChartTab({ chartType }: ChartProps) {
           height={600}
         />
       </div>
-      <ToastContainer closeOnClick={true} />
+      {/* <ToastContainer closeOnClick={true} /> */}
     </>
   );
 }

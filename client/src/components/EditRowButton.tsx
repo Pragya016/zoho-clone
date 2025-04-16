@@ -193,7 +193,7 @@ export default function EditRowButton({ data }: Props) {
           <Button onClick={handleSaveChanges}>Save Changes</Button>
         </DialogActions>
       </Dialog>
-      <ToastContainer closeOnClick={true} />
+      {/* <ToastContainer closeOnClick={true} /> */}
     </React.Fragment>
   );
 }

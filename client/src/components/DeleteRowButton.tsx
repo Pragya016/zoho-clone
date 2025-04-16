@@ -85,7 +85,7 @@ export default function DeleteRowButton({ data }: Props) {
           </Button>
         </DialogActions>
       </Dialog>
-      <ToastContainer closeOnClick={true}/>
+      {/* <ToastContainer closeOnClick={true}/> */}
     </React.Fragment>
   );
 }

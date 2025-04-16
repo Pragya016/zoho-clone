@@ -105,7 +105,7 @@ export default function ChangePasswordCard() {
           <Button type="submit" variant="contained" id={styles.submitButton}>Change Password</Button>
       </form>
       </div>
-      <ToastContainer closeOnClick={true}/>
+      {/* <ToastContainer closeOnClick={true}/> */}
       </>
     )
 }

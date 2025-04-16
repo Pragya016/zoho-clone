@@ -81,7 +81,7 @@ export default function BarCharTab({ chartType }: ChartProps) {
           height={600}
         />
       </div>
-      <ToastContainer closeOnClick={true} />
+      {/* <ToastContainer closeOnClick={true} /> */}
     </>
   );
 }

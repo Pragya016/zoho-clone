@@ -72,7 +72,7 @@ export default function DeleteTaskButton({ taskId }: Props) {
           </Button>
         </DialogActions>
       </Dialog>
-      <ToastContainer closeOnClick={true}/>
+      {/* <ToastContainer closeOnClick={true}/> */}
     </React.Fragment>
   );
 }
